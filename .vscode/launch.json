@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Launch Program",
+        "type": "chrome",
+        "request": "launch",
+        "url":"http://localhost:9000",
+        "cwd": "${workspaceRoot}",
+        "program": "${workspaceRoot}/src/index.ts",
+        "outFiles": [
+          "${workspaceRoot}/dist/app.bundle.js"
+        ],
+        "sourceMaps": true
+      }
+    ]
+  }
