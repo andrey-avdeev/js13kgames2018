@@ -10,7 +10,7 @@ window.onload = () => {
   let quadtree = kontra.quadtree();
 
   //generate objects
-  let player = kontra.sprite(new Player(kontra, kontra.canvas.width / 2 - 10, kontra.canvas.height / 2 - 10, 0, -1, null, 'black', 20, 20)) as Player;
+  let player = kontra.sprite(new Player(kontra, kontra.canvas.width / 2 - 10, kontra.canvas.height / 2 - 10, 0, +1, null, 'black', 20, 20, kontra.canvas.height / 2)) as Player;
 
   kontra.pointer.onDown(function (event, object) {
     if (event.touches) {
@@ -32,21 +32,25 @@ window.onload = () => {
 
   let platforms = kontra.pool({
     create: kontra.sprite,
-    maxSize: 20,
+    maxSize: 100,
   });
 
   for (var i = 1; i <= platforms.maxSize; i++) {
+    let height = Math.floor(Math.random() * kontra.canvas.height * 2) + 0
     platforms.get(
       new Platform(kontra,
         Math.floor(Math.random() * kontra.canvas.width) + 0,
-        Math.floor(Math.random() * kontra.canvas.height) + 0,
+        kontra.canvas.height - height,
         0,
         0,
         null,
         'red',
         30,
         10,
-        Infinity)
+        Infinity,
+        player,
+        height
+      )
     );
   }
 
@@ -57,21 +61,47 @@ window.onload = () => {
 
       quadtree.clear();
       quadtree.add(platforms.getAliveObjects());
+      // console.log('platfroms size:', platforms.getAliveObjects().length);
 
       let objects = quadtree.get(player);
 
       let playerMustJump = false;
 
-      for (var i = 0, obj; obj = objects[i]; i++) {
+      let wasCollision = false;
+      var i = -1;
+      while (!wasCollision && ++i < objects.length) {
+        let obj = objects[i];
         if (obj.type === 'platform' && obj.collidesWith(player)) {
           playerMustJump = true;
-          obj.dy=10;
+          obj.dy = 20;
           obj.underTension = true;
+          player.preLastPlatform = player.lastPlatform;
+          player.lastPlatform = obj;
         }
       }
 
       if (playerMustJump) player.jump();
 
+      //generate new platforms
+      for (var i = 0; i <= platforms.maxSize - platforms.getAliveObjects().length; i++) {
+        let height = Math.floor(Math.random() * kontra.canvas.height * 2 * 2) + 0;
+        let altitude = player.altitude + kontra.canvas.height / 2 + height;
+        platforms.get(
+          new Platform(kontra,
+            Math.floor(Math.random() * kontra.canvas.width) + 0,
+            player.altitude - altitude + kontra.canvas.height / 2,
+            0,
+            0,
+            null,
+            'red',
+            30,
+            10,
+            Infinity,
+            player,
+            altitude
+          )
+        );
+      }
     },
     render: function () {
       (player as any).render();
