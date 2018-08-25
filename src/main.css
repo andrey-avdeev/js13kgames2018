@@ -1,10 +1,5 @@
 body{
-    background-color:  wheat;
+    background-color:  white;
     border: tomato;
     border-width: 1px;
-}
-#foreground{
-    /* width: 640;
-    height: 800; */
-    background-color: white;
 }

@@ -1,5 +1,6 @@
 import { Sprite } from './sprite';
 import { Platform } from './platform';
+import { Config } from '../config';
 
 export class Player extends Sprite {
 
@@ -28,98 +29,76 @@ export class Player extends Sprite {
     public preLastPlatform: Platform;
     public lastPlatform: Platform;
     public context: CanvasRenderingContext2D;
+    public backgroundContext: CanvasRenderingContext2D;
 
-    /**
-     * update
-     */
     public update() {
-        if (this.x + this.width > this.game.canvas.width) {
-            this.x = this.game.canvas.width - this.width;
-        }
-        if (this.x < 0) {
-            this.x = 0;
-        }
+        this.checkBorders();
+        this.checkControls();
+        this.updateMoving();
+        this.applyForces();
+        this.calculateAltitudes();
 
+        //TODO - to be removed
+        if (this.game.keys.pressed('space') || this.altitude <= 0) this.jump();
+    }
+
+    public render() {
+        (this as any).draw();
+
+        if (this.lastPlatform) {
+            // this.backgroundContext.save();
+
+            // this.backgroundContext.clearRect(0, 0, this.game.canvas.width, this.game.canvas.height);
+
+            this.backgroundContext.strokeStyle = 'blue';
+            this.backgroundContext.lineWidth = 2;
+
+            this.backgroundContext.beginPath();
+            this.backgroundContext.moveTo(this.lastPlatform.x + this.lastPlatform.width / 2, this.lastPlatform.y + this.lastPlatform.height / 2);
+            this.backgroundContext.lineTo(this.x + this.width / 2, this.y + this.height / 2);
+            this.backgroundContext.stroke();
+
+            // this.backgroundContext.restore();
+        }
+    }
+
+    public checkBorders() {
+        if (this.x + this.width > this.game.canvas.width) this.x = this.game.canvas.width - this.width;
+        if (this.x < 0) this.x = 0;
+    }
+
+    public checkControls() {
         if (this.game.keys.pressed('left') || this.movingDirection < 0) {
             this.moveLeft();
         }
         else if (this.game.keys.pressed('right') || this.movingDirection > 0) {
             this.moveRight();
         }
+    }
 
-        if (this.game.keys.pressed('space')) {
-            this.jump();
-        }
-
-        if (this.altitude <= 0) this.jump();
-
+    public updateMoving() {
         this.x += this.dx;
-        this.altitude -= this.dy;
+        this.altitude += this.dy;
+    }
 
+    public moveLeft() { this.dx -= Config.PLAYER_HORIZONTAL_SPEED; }
+    public moveRight() { this.dx += Config.PLAYER_HORIZONTAL_SPEED; }
+    public jump() { this.dy = Config.PLAYER_JUMP_SPEED; }
+
+    public applyForces() {
         this.applyGravity();
-
-        this.calculateAltitudes();
+        this.applyFriction();
     }
 
-    /**
-     * render
-     */
-    public render() {
-        (this as any).draw();
-        //         ctx.beginPath();
-        // ctx.moveTo(0,0);
-        // ctx.lineTo(300,150);
-        // ctx.stroke();
-        // if (this.lastPlatform && this.preLastPlatform) {
-        //     this.context.save();
-
-        //     this.context.clearRect(0, 0, this.game.canvas.width, this.game.canvas.height);
-
-        //     this.context.strokeStyle = 'blue';
-        //     this.context.lineWidth = 2;
-
-        //     this.context.beginPath;
-        //     this.context.moveTo(this.lastPlatform.x, this.lastPlatform.y);
-        //     this.context.lineTo(this.x, this.y);
-        //     this.context.stroke();
-
-        //     this.context.restore();
-        // }
+    public applyFriction() {
+        this.dx = this.dx * Config.WORLD_FRICTION_FACTOR;
+        if (Math.round(this.dx) == 0) this.dx = 0;
     }
 
-    /**
-     * moveLeft
-     */
-    public moveLeft() {
-        this.x -= 5;
-    }
+    public applyGravity() { this.dy -= Config.WORLD_GRAVITY_FACTOR; }
 
-    /**
-     * moveRight
-     */
-    public moveRight() {
-        this.x += 5;
-    }
-
-    /**
-     * jump
-     */
-    public jump() {
-        this.dy = -16;
-    }
-
-    /**
-     * applyForce
-     */
-    public applyGravity() {
-        this.dy += 0.5;
-    }
-
-    /**
-     * calculateAltitudes
-     */
     public calculateAltitudes() {
-        this.lastMaxAltitude = (this.altitude > this.lastMaxAltitude) ? this.altitude : this.lastMaxAltitude;
         this.previousMaxAltitude = this.lastMaxAltitude;
+        this.lastMaxAltitude = (this.altitude > this.lastMaxAltitude) ? this.altitude : this.lastMaxAltitude;
     }
 }

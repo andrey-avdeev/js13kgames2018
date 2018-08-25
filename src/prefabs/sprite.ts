@@ -9,8 +9,9 @@ export abstract class Sprite {
         public color: string,
         public width: number,
         public height: number,
-        public type:string,
+        public type: string,
         public ttl: number = Infinity
     ) {
     }
+    public id: number = new Date().getUTCMilliseconds();
 }

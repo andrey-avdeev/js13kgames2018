@@ -2,15 +2,22 @@ import Config from './config';
 import './main.css';
 import { Platform } from './prefabs/platform'
 import { Player } from './prefabs/player';
+import { Utils } from './utils';
 
 window.onload = () => {
   var kontra = (window as any).kontra;
-  kontra.init();
+  kontra.init("foreground");
+  kontra.background = {
+    canvas: document.getElementById('background'),
+    context: (document.getElementById('background') as any).getContext('2d') as CanvasRenderingContext2D
+  }
 
   let quadtree = kontra.quadtree();
 
   //generate objects
   let player = kontra.sprite(new Player(kontra, kontra.canvas.width / 2 - 10, kontra.canvas.height / 2 - 10, 0, +1, null, 'black', 20, 20, kontra.canvas.height / 2)) as Player;
+  player.backgroundContext = kontra.background.context;
+
 
   kontra.pointer.onDown(function (event, object) {
     if (event.touches) {
@@ -38,15 +45,17 @@ window.onload = () => {
   for (var i = 1; i <= platforms.maxSize; i++) {
     let height = Math.floor(Math.random() * kontra.canvas.height * 2) + 0
     platforms.get(
+      // Utils.spawnPlatform(kontra,player)
       new Platform(kontra,
+        kontra.background.context,
         Math.floor(Math.random() * kontra.canvas.width) + 0,
         kontra.canvas.height - height,
         0,
         0,
         null,
         'red',
-        30,
-        10,
+        Config.PLATFORM_BASE_WIDTH,
+        Config.PLATFORM_BASE_HEIGHT,
         Infinity,
         player,
         height
@@ -61,7 +70,6 @@ window.onload = () => {
 
       quadtree.clear();
       quadtree.add(platforms.getAliveObjects());
-      // console.log('platfroms size:', platforms.getAliveObjects().length);
 
       let objects = quadtree.get(player);
 
@@ -73,10 +81,15 @@ window.onload = () => {
         let obj = objects[i];
         if (obj.type === 'platform' && obj.collidesWith(player)) {
           playerMustJump = true;
-          obj.dy = 20;
+          obj.dy = 10;
           obj.underTension = true;
+          obj.isConnectedWithPlayer = true;
           player.preLastPlatform = player.lastPlatform;
+          if (player.preLastPlatform) player.preLastPlatform.isConnectedWithPlayer = false;
           player.lastPlatform = obj;
+
+          player.lastPlatform.inConnection = player.preLastPlatform;
+          if (player.preLastPlatform) player.preLastPlatform.outConnection = player.lastPlatform;
         }
       }
 
@@ -84,28 +97,37 @@ window.onload = () => {
 
       //generate new platforms
       for (var i = 0; i <= platforms.maxSize - platforms.getAliveObjects().length; i++) {
-        let height = Math.floor(Math.random() * kontra.canvas.height * 2 * 2) + 0;
-        let altitude = player.altitude + kontra.canvas.height / 2 + height;
-        platforms.get(
-          new Platform(kontra,
-            Math.floor(Math.random() * kontra.canvas.width) + 0,
-            player.altitude - altitude + kontra.canvas.height / 2,
-            0,
-            0,
-            null,
-            'red',
-            30,
-            10,
-            Infinity,
-            player,
-            altitude
-          )
-        );
+        platforms.get(Utils.spawnPlatform(kontra, player, true));
+
+        // let height = Math.floor(Math.random() * kontra.canvas.height * 2 * 2) + 0;
+        // let altitude = player.altitude + kontra.canvas.height / 2 + height;
+        // platforms.get(
+        //   new Platform(kontra,
+        //     kontra.background.context,
+        //     Math.floor(Math.random() * kontra.canvas.width) + 0,
+        //     player.altitude - altitude + kontra.canvas.height / 2,
+        //     0,
+        //     0,
+        //     null,
+        //     'red',
+        //     30,
+        //     10,
+        //     Infinity,
+        //     player,
+        //     altitude
+        //   )
+        // );
       }
     },
     render: function () {
+      kontra.background.context.save();
+
+      kontra.background.context.clearRect(0, 0, kontra.canvas.width, kontra.canvas.height);
+
       (player as any).render();
       platforms.render();
+
+      kontra.background.context.restore()
     }
   });
 

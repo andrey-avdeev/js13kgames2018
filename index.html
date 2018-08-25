@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Js13kgames2018 by Andrew Avdeev</title>
 </head>
+
 <body>
     <div>
         <div id="content">
-            <canvas id='foreground' width="640" height="800"></canvas>
+            <canvas id="background" width="640" height="800" style="position:absolute; z-index:1;"></canvas>
+            <canvas id="foreground" width="640" height="800" style="position:absolute; z-index:2;"></canvas>
+            <canvas id="ui" width="640" height="800" style="position:absolute; z-index:3;"></canvas>
         </div>
     </div>
 </body>
+
 </html>
