@@ -5,7 +5,7 @@ import { Config } from '../config';
 export class Platform extends Sprite {
     constructor(
         game: any,
-        public backgroundContext:CanvasRenderingContext2D,
+        public backgroundContext: CanvasRenderingContext2D,
         x: number,
         y: number,
         dx: number,
@@ -25,7 +25,8 @@ export class Platform extends Sprite {
     public underTension: boolean = false;
     public onScreen: boolean = true;
     public inConnection: Platform = null;
-    public outConnection:Platform = null;
+    public outConnection: Platform = null;
+    public wasRegenerated: boolean = true;
 
     public update() {
         if (!this.outOfBorders()) {
@@ -68,12 +69,10 @@ export class Platform extends Sprite {
 
     public destroy() { this.ttl = 0; }
 
-    public render(){
+    public render() {
         (this as any).draw();
 
-        if(this.outConnection){
-
-
+        if (this.outConnection && !this.outConnection.wasRegenerated) {
             this.backgroundContext.strokeStyle = 'green';
             this.backgroundContext.lineWidth = 2;
 
@@ -81,8 +80,6 @@ export class Platform extends Sprite {
             this.backgroundContext.moveTo(this.outConnection.x + this.outConnection.width / 2, this.outConnection.y + this.outConnection.height / 2);
             this.backgroundContext.lineTo(this.x + this.width / 2, this.y + this.height / 2);
             this.backgroundContext.stroke();
-
-            // this.backgroundContext.restore();
         }
     }
 }

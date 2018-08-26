@@ -74,7 +74,9 @@ let config = {
       filename: "style.css",
     }),
     new webpack.ProvidePlugin({
-      'window.kontra':'exports-loader?kontra!kontra/kontra.js'
+      'window.kontra':'exports-loader?kontra!kontra/kontra.js',
+      'window.CPlayer':'exports-loader?CPlayer!./lib/player-small.js',
+      'window.song':'exports-loader?song!./lib/song.js'
     }),
     new CopyWebpackPlugin([{
       from: './src/assets',
