@@ -11,12 +11,13 @@ export class Player extends Sprite {
         dx: number,
         dy: number,
         image: any,
+        animations: any,
         color: string,
         width: number,
         height: number,
         public altitude: number
     ) {
-        super(game, x, y, dx, dy, image, color, width, height, "player");
+        super(game, x, y, dx, dy, image, animations, color, width, height, "player");
     }
 
     public force: number;
@@ -31,7 +32,8 @@ export class Player extends Sprite {
     public context: CanvasRenderingContext2D;
     public backgroundContext: CanvasRenderingContext2D;
 
-    public update() {
+    public update(dt) {
+        if ((this as any)._ca) (this as any)._ca.update(dt);
         this.checkBorders();
         this.checkControls();
         this.updateMoving();
@@ -43,22 +45,16 @@ export class Player extends Sprite {
     }
 
     public render() {
-        (this as any).draw();
+        (this as any)._ca.render(this as any);
 
         if (this.lastPlatform) {
-            // this.backgroundContext.save();
-
-            // this.backgroundContext.clearRect(0, 0, this.game.canvas.width, this.game.canvas.height);
-
             this.backgroundContext.strokeStyle = 'blue';
             this.backgroundContext.lineWidth = 2;
 
             this.backgroundContext.beginPath();
-            this.backgroundContext.moveTo(this.lastPlatform.x + this.lastPlatform.width / 2, this.lastPlatform.y + this.lastPlatform.height / 2);
-            this.backgroundContext.lineTo(this.x + this.width / 2, this.y + this.height / 2);
+            this.backgroundContext.moveTo(this.lastPlatform.x + 42, this.lastPlatform.y + 7);
+            this.backgroundContext.lineTo(this.x + 13, this.y + 22);
             this.backgroundContext.stroke();
-
-            // this.backgroundContext.restore();
         }
     }
 
@@ -83,7 +79,11 @@ export class Player extends Sprite {
 
     public moveLeft() { this.dx -= Config.PLAYER_HORIZONTAL_SPEED; }
     public moveRight() { this.dx += Config.PLAYER_HORIZONTAL_SPEED; }
-    public jump() { this.dy = Config.PLAYER_JUMP_SPEED; }
+    public jump() {
+        this.dy = Config.PLAYER_JUMP_SPEED;
+        (this as any).playAnimation('jump');
+        console.log(this.lastMaxAltitude);
+    }
 
     public applyForces() {
         this.applyGravity();

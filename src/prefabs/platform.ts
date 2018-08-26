@@ -11,6 +11,7 @@ export class Platform extends Sprite {
         dx: number,
         dy: number,
         image: any,
+        animations: any,
         color: string,
         width: number,
         height: number,
@@ -19,7 +20,7 @@ export class Platform extends Sprite {
         public altitude: number,
         public isConnectedWithPlayer: boolean = false
     ) {
-        super(game, x, y, dx, dy, image, color, width, height, "platform", ttl);
+        super(game, x, y, dx, dy, image, animations, color, width, height, "platform", ttl);
     }
 
     public underTension: boolean = false;
@@ -28,7 +29,8 @@ export class Platform extends Sprite {
     public outConnection: Platform = null;
     public wasRegenerated: boolean = true;
 
-    public update() {
+    public update(dt) {
+        if ((this as any)._ca) (this as any)._ca.update(dt);
         if (!this.outOfBorders()) {
             this.y = this.player.altitude - this.altitude + this.game.canvas.height / 2;
 
@@ -70,15 +72,16 @@ export class Platform extends Sprite {
     public destroy() { this.ttl = 0; }
 
     public render() {
-        (this as any).draw();
+        (this as any)._ca.render(this as any);
+        // (this as any).draw();
 
         if (this.outConnection && !this.outConnection.wasRegenerated) {
             this.backgroundContext.strokeStyle = 'green';
             this.backgroundContext.lineWidth = 2;
 
             this.backgroundContext.beginPath();
-            this.backgroundContext.moveTo(this.outConnection.x + this.outConnection.width / 2, this.outConnection.y + this.outConnection.height / 2);
-            this.backgroundContext.lineTo(this.x + this.width / 2, this.y + this.height / 2);
+            this.backgroundContext.moveTo(this.outConnection.x + 7, this.outConnection.y + 7);
+            this.backgroundContext.lineTo(this.x + 42, this.y + 7);
             this.backgroundContext.stroke();
         }
     }
