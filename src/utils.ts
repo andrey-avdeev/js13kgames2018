@@ -34,7 +34,7 @@ export class Utils {
             platform = new Platform(
                 game,
                 game.background.context,
-                Math.floor(Math.random() * game.canvas.width) + 0,
+                Math.floor(Math.random() * (game.canvas.width - Config.PLATFORM_BASE_WIDTH)) + 0,
                 game.canvas.height - height,
                 0,
                 0,
