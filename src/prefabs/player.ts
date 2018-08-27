@@ -1,23 +1,39 @@
 import { Sprite } from './sprite';
 import { Platform } from './platform';
 import { Config } from '../config';
+import { Game } from '../game';
 
 export class Player extends Sprite {
 
     constructor(
-        game: any,
+        game: Game,
         x: number,
         y: number,
         dx: number,
         dy: number,
-        image: any,
-        animations: any,
-        color: string,
-        width: number,
-        height: number,
         public altitude: number
     ) {
-        super(game, x, y, dx, dy, image, animations, color, width, height, "player");
+        super(game, x, y, dx, dy, null, null, 'black', Config.PLAYER_BASE_WIDTH, Config.PLAYER_BASE_HEIGHT, "player");
+
+        let spriteSheet = this.game.engine.spriteSheet({
+            image: this.game.engine.assets.images.player,
+            frameWidth: Config.PLAYER_BASE_WIDTH,
+            frameHeight: Config.PLAYER_BASE_HEIGHT,
+            animations: {
+                idle: {
+                    frames: [0, 1],
+                    frameRate: 10,
+                    loop: true
+                },
+                jump: {
+                    frames: [2, 1, 0],
+                    frameRate: 10,
+                    loop: false
+                }
+            }
+        });
+
+        this.animations = spriteSheet.animations;
     }
 
     public force: number;
@@ -30,7 +46,8 @@ export class Player extends Sprite {
     public preLastPlatform: Platform;
     public lastPlatform: Platform;
     public context: CanvasRenderingContext2D;
-    public backgroundContext: CanvasRenderingContext2D;
+    public connectionWidth: number = 1;
+    public connectionIncrementFactor: number = 1;
 
     public update(dt) {
         if ((this as any)._ca) (this as any)._ca.update(dt);
@@ -40,34 +57,42 @@ export class Player extends Sprite {
         this.applyForces();
         this.calculateAltitudes();
 
+        let game = this.game;
+        setTimeout(() => {
+            if (game.player.connectionWidth > 6 || game.player.connectionWidth <= 0)
+                game.player.connectionIncrementFactor *= -1;
+
+            game.player.connectionWidth += 1 * game.player.connectionIncrementFactor;
+        },2000)
+
         //TODO - to be removed
-        if (this.game.keys.pressed('space') || this.altitude <= 0) this.jump();
+        if (this.game.engine.keys.pressed('space') || this.altitude <= 0) this.jump();
     }
 
     public render() {
         (this as any)._ca.render(this as any);
 
         if (this.lastPlatform) {
-            this.backgroundContext.strokeStyle = 'blue';
-            this.backgroundContext.lineWidth = 2;
+            this.game.background.context.strokeStyle = 'rgb(0, 78, 151)';
+            this.game.background.context.lineWidth = this.connectionWidth;
 
-            this.backgroundContext.beginPath();
-            this.backgroundContext.moveTo(this.lastPlatform.x + 42, this.lastPlatform.y + 7);
-            this.backgroundContext.lineTo(this.x + 13, this.y + 22);
-            this.backgroundContext.stroke();
+            this.game.background.context.beginPath();
+            this.game.background.context.moveTo(this.lastPlatform.x + 42, this.lastPlatform.y + 7);
+            this.game.background.context.lineTo(this.x + 13, this.y + 22);
+            this.game.background.context.stroke();
         }
     }
 
     public checkBorders() {
-        if (this.x + this.width > this.game.canvas.width) this.x = this.game.canvas.width - this.width;
+        if (this.x + this.width > this.game.engine.canvas.width) this.x = this.game.engine.canvas.width - this.width;
         if (this.x < 0) this.x = 0;
     }
 
     public checkControls() {
-        if (this.game.keys.pressed('left') || this.movingDirection < 0) {
+        if (this.game.engine.keys.pressed('left') || this.movingDirection < 0) {
             this.moveLeft();
         }
-        else if (this.game.keys.pressed('right') || this.movingDirection > 0) {
+        else if (this.game.engine.keys.pressed('right') || this.movingDirection > 0) {
             this.moveRight();
         }
     }
@@ -82,7 +107,6 @@ export class Player extends Sprite {
     public jump() {
         this.dy = Config.PLAYER_JUMP_SPEED;
         (this as any).playAnimation('jump');
-        console.log(this.lastMaxAltitude);
     }
 
     public applyForces() {

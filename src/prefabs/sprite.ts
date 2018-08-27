@@ -1,8 +1,8 @@
-import { Utils } from "../utils";
+import { Game } from "../game";
 
 export abstract class Sprite {
     constructor(
-        public game: any,
+        public game: Game,
         public x: number,
         public y: number,
         public dx: number,
@@ -16,8 +16,5 @@ export abstract class Sprite {
         public ttl: number = Infinity
     ) {
     }
-    // public id: number = new Date().getUTCMilliseconds();
     public id: string = null;
-
-    // public animations: object = null;
 }

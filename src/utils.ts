@@ -1,97 +1,59 @@
 import { Platform } from './prefabs/platform';
 import { Config } from './config';
-import { Player } from './prefabs/player';
+import { Game } from './game';
 
 export class Utils {
-    public static spawnPlatform = (game: any, player: Player, isRegenerated: boolean = false): Platform => {
-        let spriteSheet = game.spriteSheet({
-            image: game.assets.images.platform,
-            frameWidth: 50,
-            frameHeight: 16,
-            animations: {
-                idle: {
-                    frames: [0],
-                    frameRate: 10,
-                    loop: true
-                },
-                connected: {
-                    frames: [1, 2, 1],
-                    frameRate: 20,
-                    loop: true
-                },
-                charged: {
-                    frames: [3, 4, 3],
-                    frameRate: 20,
-                    loop: true
-                }
-            }
-        });
-
+    public static spawnPlatform = (game: Game, isRegenerated: boolean = false): Platform => {
         var platform = null;
 
         if (!isRegenerated) {
-            let height = Math.floor(Math.random() * game.canvas.height * 2) + 0
+            let height = Math.floor(Math.random() * Config.GAME_HEIGHT * 2) + 0
             platform = new Platform(
                 game,
-                game.background.context,
-                Math.floor(Math.random() * (game.canvas.width - Config.PLATFORM_BASE_WIDTH)) + 0,
-                game.canvas.height - height,
+                Math.floor(Math.random() * (Config.GAME_WIDTH - Config.PLATFORM_BASE_WIDTH)) + 0,
+                Config.GAME_HEIGHT - height,
                 0,
                 0,
-                null,
-                spriteSheet.animations,
-                'red',
-                Config.PLATFORM_BASE_WIDTH,
-                Config.PLATFORM_BASE_HEIGHT,
                 Infinity,
-                player,
                 height
             )
         } else {
-            let height = Math.floor(Math.random() * game.canvas.height * 2) + 0;
-            let altitude = player.altitude + game.canvas.height / 2 + height;
+            let height = Math.floor(Math.random() * Config.GAME_HEIGHT * 2) + 0;
+            let altitude = game.player.altitude + Config.GAME_HEIGHT / 2 + height;
             platform = new Platform(
                 game,
-                game.background.context,
-                Math.floor(Math.random() * (game.canvas.width - Config.PLATFORM_BASE_WIDTH)) + 0,
-                player.altitude - altitude + game.canvas.height / 2,
+                Math.floor(Math.random() * (Config.GAME_WIDTH - Config.PLATFORM_BASE_WIDTH)) + 0,
+                game.player.altitude - altitude + Config.GAME_HEIGHT / 2,
                 0,
                 0,
-                null,
-                spriteSheet.animations,
-                'red',
-                Config.PLATFORM_BASE_WIDTH,
-                Config.PLATFORM_BASE_HEIGHT,
                 Infinity,
-                player,
                 altitude
             )
         }
         platform.id = Utils.uuid();
-        // console.log(platform as any);
-        platform = game.sprite(platform);
-        // console.log(platform);
+        platform = game.engine.sprite(platform);
         (platform as any).playAnimation('idle');
 
         return platform;
     }
 
-    public static initTouchControl = (game: any, player: Player): void => {
-        game.pointer.onDown(function (event, object) {
+    public static initTouchControl = (game: Game): void => {
+        game.engine.pointer.onDown(function (event, object) {
             if (event.touches) {
                 let touch = event.touches[0];
-                event.x = touch.pageX;;
-                event.y = touch.pageY;
+                event.x = touch.clientX;
+                event.y = touch.clientY;
+                console.log(touch);
             }
 
-            if (event.x > game.canvas.width / 2) {
-                player.movingDirection = 1;
-            } else if (event.x < game.canvas.width / 2) {
-                player.movingDirection = -1;
+            if (event.x > Config.GAME_WIDTH / 2) {
+                game.player.movingDirection = 1;
+            } else if (event.x < Config.GAME_WIDTH / 2) {
+                game.player.movingDirection = -1;
             }
         });
 
-        game.pointer.onUp((event, object) => player.movingDirection = 0);
+        game.engine.pointer.onUp((event, object) => game.player.movingDirection = 0);
     }
 
     public static uuid() {

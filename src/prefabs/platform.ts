@@ -1,26 +1,45 @@
 import { Sprite } from './sprite';
 import { Player } from './player';
 import { Config } from '../config';
+import { Game } from '../game';
 
 export class Platform extends Sprite {
     constructor(
-        game: any,
-        public backgroundContext: CanvasRenderingContext2D,
+        game: Game,
         x: number,
         y: number,
         dx: number,
         dy: number,
-        image: any,
-        animations: any,
-        color: string,
-        width: number,
-        height: number,
         ttl: number,
-        public player: Player,
         public altitude: number,
         public isConnectedWithPlayer: boolean = false
     ) {
-        super(game, x, y, dx, dy, image, animations, color, width, height, "platform", ttl);
+        super(game, x, y, dx, dy, null, null, 'red', Config.PLATFORM_BASE_WIDTH, Config.PLATFORM_BASE_HEIGHT, "platform", ttl);
+
+        let spriteSheet = game.engine.spriteSheet({
+            image: game.engine.assets.images.platform,
+            frameWidth: Config.PLATFORM_BASE_WIDTH,
+            frameHeight: Config.PLATFORM_BASE_HEIGHT,
+            animations: {
+                idle: {
+                    frames: [0],
+                    frameRate: 10,
+                    loop: true
+                },
+                connected: {
+                    frames: [1, 2, 1],
+                    frameRate: 20,
+                    loop: true
+                },
+                charged: {
+                    frames: [3, 4, 3],
+                    frameRate: 20,
+                    loop: true
+                }
+            }
+        });
+        
+        this.animations = spriteSheet.animations;
     }
 
     public underTension: boolean = false;
@@ -32,7 +51,7 @@ export class Platform extends Sprite {
     public update(dt) {
         if ((this as any)._ca) (this as any)._ca.update(dt);
         if (!this.outOfBorders()) {
-            this.y = this.player.altitude - this.altitude + this.game.canvas.height / 2;
+            this.y = this.game.player.altitude - this.altitude + Config.GAME_HEIGHT / 2;
 
             if (this.dx != 0 || this.dy != 0) {
                 this.x += this.dx;
@@ -51,7 +70,7 @@ export class Platform extends Sprite {
     }
 
     public outOfBorders() {
-        if (this.altitude + this.game.canvas.height <= this.player.altitude
+        if (this.altitude + Config.GAME_HEIGHT <= this.game.player.altitude
             && !this.isConnectedWithPlayer) {
             this.onScreen = false;
             this.destroy();
@@ -72,17 +91,17 @@ export class Platform extends Sprite {
     public destroy() { this.ttl = 0; }
 
     public render() {
-        (this as any)._ca.render(this as any);
         // (this as any).draw();
+        (this as any)._ca.render(this as any);
 
         if (this.outConnection && !this.outConnection.wasRegenerated) {
-            this.backgroundContext.strokeStyle = 'green';
-            this.backgroundContext.lineWidth = 2;
+            this.game.background.context.strokeStyle = 'green';
+            this.game.background.context.lineWidth = 2;
 
-            this.backgroundContext.beginPath();
-            this.backgroundContext.moveTo(this.outConnection.x + 7, this.outConnection.y + 7);
-            this.backgroundContext.lineTo(this.x + 42, this.y + 7);
-            this.backgroundContext.stroke();
+            this.game.background.context.beginPath();
+            this.game.background.context.moveTo(this.outConnection.x + 7, this.outConnection.y + 7);
+            this.game.background.context.lineTo(this.x + 42, this.y + 7);
+            this.game.background.context.stroke();
         }
     }
 }
