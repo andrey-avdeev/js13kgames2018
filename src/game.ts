@@ -3,6 +3,7 @@ import { Platform } from './prefabs/platform'
 import { Player } from './prefabs/player';
 import { Utils } from './utils';
 import { RenderingMeta } from './rendering-meta';
+import { Information } from './information';
 
 
 export class Game {
@@ -29,10 +30,12 @@ export class Game {
     public soundsWereInitialized: boolean = false;
     public imagesWereInitialized: boolean = false;
 
-    public player: any = null;
+    public player: Player = null;
     public platforms: any = null;
 
     public quadtree: any = null;
+
+    public information: Information = null;
 
     public prepare() {
         // this.soundPrepare();
@@ -93,6 +96,8 @@ export class Game {
             this.platforms.get(Utils.spawnPlatform(game));
 
         this.quadtree = this.engine.quadtree();
+
+        this.information = new Information(this);
     }
 
     public start() {
@@ -114,13 +119,18 @@ export class Game {
                 var i = -1;
                 while (!wasCollision && ++i < objects.length) {
                     let obj = objects[i];
-                    if (obj.type === 'platform' && obj.collidesWith(game.player))
+                    if (obj.type === 'platform' && obj.collidesWith(game.player)) {
                         game.player.jumpOffPlatform(obj);
+                        wasCollision = true;
+                    }
+
                 }
 
                 //generate new platforms
                 for (var i = 0; i <= game.platforms.maxSize - game.platforms.getAliveObjects().length; i++)
                     game.platforms.get(Utils.spawnPlatform(game, true));
+
+                game.information.update();
             },
             render: function () {
                 game.background.context.save();
@@ -131,6 +141,7 @@ export class Game {
 
                 (game.player as any).render();
                 game.platforms.render();
+                game.information.render();
 
                 game.background.context.restore();
                 game.ui.context.restore();

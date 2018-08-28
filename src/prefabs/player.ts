@@ -2,6 +2,7 @@ import { Sprite } from './sprite';
 import { Platform } from './platform';
 import { Config } from '../config';
 import { Game } from '../game';
+import { Enemy } from './enemy';
 
 export class Player extends Sprite {
 
@@ -14,6 +15,8 @@ export class Player extends Sprite {
         public altitude: number
     ) {
         super(game, x, y, dx, dy, null, null, 'black', Config.PLAYER_BASE_WIDTH, Config.PLAYER_BASE_HEIGHT, "player");
+
+        this.lives = Config.PLAYER_LIVES;
 
         let spriteSheet = this.game.engine.spriteSheet({
             image: this.game.engine.assets.images.player,
@@ -49,6 +52,11 @@ export class Player extends Sprite {
     public connectionWidth: number = 1;
     public blue: number = 256;
     public connectionIncrementFactor: number = 1;
+
+    public jumps: number = 0;
+    public connectedPlatforms: number = 0;
+    public lives: number = 0;
+    public killedEnemies: number = 0;
 
     public update(dt) {
         if ((this as any)._ca) (this as any)._ca.update(dt);
@@ -101,6 +109,7 @@ export class Player extends Sprite {
     public moveRight() { this.dx += Config.PLAYER_HORIZONTAL_SPEED; }
     public jump() {
         this.dy = Config.PLAYER_JUMP_SPEED;
+        this.jumps += 1;
         (this as any).playAnimation('jump');
     }
 
@@ -144,11 +153,17 @@ export class Player extends Sprite {
         if (this.preLastPlatform) {
             this.preLastPlatform.isConnectedWithPlayer = false;
             this.preLastPlatform.wasRegenerated = false;
-            if (this.preLastPlatform.id != this.lastPlatform.id)
+            if (this.preLastPlatform.id != this.lastPlatform.id) {
+                this.connectedPlatforms += 1;
                 (this.preLastPlatform as any).playAnimation('charged');
+            }
         }
         this.lastPlatform.inConnection = this.preLastPlatform;
         if (this.preLastPlatform)
             this.preLastPlatform.outConnection = this.lastPlatform;
+    }
+
+    public killEnemy(enemy: Enemy) {
+        this.killedEnemies += 1;
     }
 }

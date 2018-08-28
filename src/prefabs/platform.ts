@@ -1,5 +1,4 @@
 import { Sprite } from './sprite';
-import { Player } from './player';
 import { Config } from '../config';
 import { Game } from '../game';
 

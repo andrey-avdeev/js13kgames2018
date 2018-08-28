@@ -9,6 +9,7 @@ export class Config {
   public static PLAYER_JUMP_SPEED: number = 16;
   public static PLAYER_BASE_WIDTH: number = 26;
   public static PLAYER_BASE_HEIGHT: number = 26;
+  public static PLAYER_LIVES: number = 3;
 
   public static PLATFORM_LIVE_GAP: 2;
   public static PLATFORM_BASE_WIDTH: number = 50;
