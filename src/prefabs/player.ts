@@ -189,7 +189,6 @@ export class Player extends Sprite {
     }
 
     public refreshPosition() {
-        console.log('refresh position', this.lives);
         let x0 = this.x;
         let x1 = this.lastPlatform.x;
         let y0 = this.altitude;

@@ -1,6 +1,7 @@
 export class Config {
   public static GAME_HEIGHT: number = 640;
   public static GAME_WIDTH: number = 360;
+  public static GAME_EXTRA_LIVE_FACTOR: number = 100;
 
   public static WORLD_FRICTION_FACTOR: number = 0.5;
   public static WORLD_GRAVITY_FACTOR: number = 0.5;
@@ -22,7 +23,7 @@ export class Config {
   public static ENEMY_BASE_WIDTH: number = 32;
   public static ENEMY_BASE_HEIGHT: number = 32;
   public static ENEMY_POOL_MAX_SIZE: number = 20;
-  public static ENEMY_MIN_SPEED:number = 2
+  public static ENEMY_MIN_SPEED: number = 2
   public static ENEMY_SPEED: number = 2;
   public static ENEMY_MAX_SPEED: number = 4;
   public static ENEMY_MIN_GENERATION_TIMEOUT: number = 500;

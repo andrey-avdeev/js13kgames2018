@@ -153,11 +153,35 @@ export class Game {
 
     public gameOver() {
         this.stop();
-        this.restart();
+        let game = this;
+
+        document.getElementById('content').style.display = 'none';
+        document.getElementById('gameover').style.display = 'block';
+
+        let removeHandlers = ()=>{
+            document.onkeydown = null;
+            document.ontouchstart = null;
+        }
+
+        document.onkeydown = (e) => {
+            removeHandlers();
+
+            let event = e || window.event as KeyboardEvent;
+
+            if (event.keyCode == 37 || event.keyCode == 39)
+                game.restart();
+        };
+        
+        document.ontouchstart = (e)=>{
+            removeHandlers();
+            game.restart();
+        }
     }
 
     public restart() {
         this.init();
+        document.getElementById('gameover').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
         this.start();
     }
 
