@@ -14,15 +14,15 @@ export class Config {
   public static PLAYER_LIVES: number = 3;
 
   public static PLATFORM_LIVE_GAP: 2;
-  public static PLATFORM_BASE_WIDTH: number = 50;
-  public static PLATFORM_BASE_HEIGHT: number = 16;
+  public static PLATFORM_BASE_WIDTH: number = 45;
+  public static PLATFORM_BASE_HEIGHT: number = 14;
   public static PLATFORM_POOL_MAX_SIZE: number = 32;
   public static PLATFORM_AFTERJUMP_SPEED: number = 13;
   public static PLATFORM_EXPLOSION_PULSE_TIMEOUT: number = 200;
 
   public static ENEMY_LIVE_GAP: 2;
-  public static ENEMY_BASE_WIDTH: number = 32;
-  public static ENEMY_BASE_HEIGHT: number = 32;
+  public static ENEMY_BASE_WIDTH: number = 26;
+  public static ENEMY_BASE_HEIGHT: number = 26;
   public static ENEMY_POOL_MAX_SIZE: number = 20;
   public static ENEMY_MIN_SPEED: number = 2
   public static ENEMY_SPEED: number = 2;

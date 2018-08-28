@@ -54,31 +54,26 @@ window.onload = () => {
   }
 
   setTimeout(() => {
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('story').style.display = 'block';
+    document.getElementById('story').style.display = 'none';
+    document.getElementById('about').style.display = 'block';
 
     setTimeout(() => {
-      document.getElementById('story').style.display = 'none';
-      document.getElementById('about').style.display = 'block';
+      document.getElementById('about').style.display = 'none';
+      document.getElementById('ready-screen').style.display = 'block';
 
-      setTimeout(() => {
-        document.getElementById('about').style.display = 'none';
-        document.getElementById('ready-screen').style.display = 'block';
+      let removeHandlers = () => {
+        document.onkeydown = null;
+        document.ontouchstart = null;
+      }
 
-        let removeHandlers = () => {
-          document.onkeydown = null;
-          document.ontouchstart = null;
-        }
-
-        document.onkeydown = (e) => {
-          removeHandlers();
-          initAndStart();
-        };
-        document.ontouchstart = (e) => {
-          removeHandlers();
-          initAndStart();
-        }
-      }, 1000);
-    }, 3000);
+      document.onkeydown = (e) => {
+        removeHandlers();
+        initAndStart();
+      };
+      document.ontouchstart = (e) => {
+        removeHandlers();
+        initAndStart();
+      }
+    }, 1000);
   }, 3000);
 };

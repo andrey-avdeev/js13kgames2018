@@ -15,30 +15,7 @@ export class Platform extends Sprite {
     ) {
         super(game, x, y, dx, dy, null, null, 'orange', Config.PLATFORM_BASE_WIDTH, Config.PLATFORM_BASE_HEIGHT, "platform", ttl);
 
-        let spriteSheet = game.engine.spriteSheet({
-            image: game.engine.assets.images.platform,
-            frameWidth: Config.PLATFORM_BASE_WIDTH,
-            frameHeight: Config.PLATFORM_BASE_HEIGHT,
-            animations: {
-                idle: {
-                    frames: [0],
-                    frameRate: 10,
-                    loop: true
-                },
-                connected: {
-                    frames: [1, 2, 1],
-                    frameRate: 20,
-                    loop: true
-                },
-                charged: {
-                    frames: [3, 4, 3],
-                    frameRate: 20,
-                    loop: true
-                }
-            }
-        });
-
-        this.animations = spriteSheet.animations;
+        this.image = game.engine.assets.images.platform;
     }
 
     public underTension: boolean = false;
@@ -51,6 +28,7 @@ export class Platform extends Sprite {
     public green: number = 200;
     public connectionIncrementFactor: number = 1;
     public isUnmovable: boolean = false;
+    public animation: string = 'idle';
 
     public update(dt) {
         if ((this as any)._ca) (this as any)._ca.update(dt);
@@ -102,7 +80,35 @@ export class Platform extends Sprite {
     public destroy() { this.ttl = 0; }
 
     public render() {
-        (this as any)._ca.render(this as any);
+        switch (this.animation) {
+            case 'idle':
+                this.game.foreground.context.drawImage(
+                    this.image,
+                    0,
+                    0,
+                    Config.PLATFORM_BASE_WIDTH,
+                    Config.PLATFORM_BASE_HEIGHT,
+                    this.x,
+                    this.y,
+                    Config.PLATFORM_BASE_WIDTH,
+                    Config.PLATFORM_BASE_HEIGHT
+                );
+                break;
+
+            case 'charged':
+                this.game.foreground.context.drawImage(
+                    this.image,
+                    0,
+                    Config.PLATFORM_BASE_HEIGHT,
+                    Config.PLATFORM_BASE_WIDTH,
+                    Config.PLATFORM_BASE_HEIGHT,
+                    this.x,
+                    this.y,
+                    Config.PLATFORM_BASE_WIDTH,
+                    Config.PLATFORM_BASE_HEIGHT
+                );
+                break;
+        }
 
         if (this.outConnection && !this.outConnection.wasRegenerated) {
             if (!this.game.isExplosionPulseState) {

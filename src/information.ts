@@ -63,7 +63,7 @@ export class Information {
             this.game.ui.context.fillStyle = "green";
         }
         if(this.liveWasLost){
-            this.game.ui.context.font = "16px Arial";
+            this.game.ui.context.font = "16px Arial";   
             this.game.ui.context.fillStyle = "red";
         }
 

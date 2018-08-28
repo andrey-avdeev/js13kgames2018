@@ -29,7 +29,8 @@ export class Utils {
         );
         platform.id = Utils.uuid();
         platform = game.engine.sprite(platform);
-        (platform as any).playAnimation('idle');
+        platform.animation = 'idle';
+        // (platform as any).playAnimation('idle');
 
         return platform;
     }
@@ -53,7 +54,8 @@ export class Utils {
         );
 
         enemy = game.engine.sprite(enemy);
-        (enemy as any).playAnimation('idle');
+        
+        // (enemy as any).playAnimation('idle');
         return enemy;
     }
 

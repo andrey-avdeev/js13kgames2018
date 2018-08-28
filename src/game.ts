@@ -119,7 +119,7 @@ export class Game {
             platform.isUnmovable = true;
             platform.id = Utils.uuid();
             platform = game.engine.sprite(platform);
-            (platform as any).playAnimation('idle');
+            platform.animation = 'idle';
             this.platforms.get(platform)
         }
 
@@ -188,7 +188,6 @@ export class Game {
 
     public start() {
         this.audio.play();
-        (this.player as any).playAnimation('idle');
 
         let game = this;
         this.loop = this.engine.gameLoop({

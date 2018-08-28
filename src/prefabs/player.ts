@@ -18,25 +18,7 @@ export class Player extends Sprite {
 
         this.lives = Config.PLAYER_LIVES;
 
-        let spriteSheet = this.game.engine.spriteSheet({
-            image: this.game.engine.assets.images.player,
-            frameWidth: Config.PLAYER_BASE_WIDTH,
-            frameHeight: Config.PLAYER_BASE_HEIGHT,
-            animations: {
-                idle: {
-                    frames: [0, 1],
-                    frameRate: 10,
-                    loop: true
-                },
-                jump: {
-                    frames: [2, 1, 0],
-                    frameRate: 10,
-                    loop: false
-                }
-            }
-        });
-
-        this.animations = spriteSheet.animations;
+        this.image = this.game.engine.assets.images.player;
     }
 
     public force: number;
@@ -80,7 +62,7 @@ export class Player extends Sprite {
     }
 
     public render() {
-        (this as any)._ca.render(this as any);
+        (this as any).draw();
 
         if (this.lastPlatform) {
             if (!this.game.isExplosionPulseState) {
@@ -123,7 +105,6 @@ export class Player extends Sprite {
     public jump() {
         this.dy = Config.PLAYER_JUMP_SPEED;
         this.jumps += 1;
-        (this as any).playAnimation('jump');
     }
 
     public applyForces() {
@@ -158,7 +139,7 @@ export class Player extends Sprite {
         if (!platform.isUnmovable)
             platform.dy = Config.PLATFORM_AFTERJUMP_SPEED;
 
-        (platform as any).playAnimation('connected');
+        platform.animation = 'charged';
         platform.underTension = true;
         platform.isConnectedWithPlayer = true;
         this.preLastPlatform = this.lastPlatform;
@@ -170,7 +151,7 @@ export class Player extends Sprite {
             this.preLastPlatform.wasRegenerated = false;
             if (this.preLastPlatform.id != this.lastPlatform.id) {
                 this.connectedPlatforms += 1;
-                (this.preLastPlatform as any).playAnimation('charged');
+                this.preLastPlatform.animation = 'charged';
             }
         }
         this.lastPlatform.inConnection = this.preLastPlatform;
