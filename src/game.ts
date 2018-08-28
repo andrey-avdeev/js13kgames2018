@@ -35,7 +35,8 @@ export class Game {
     public quadtree: any = null;
 
     public prepare() {
-        this.soundPrepare();
+        // this.soundPrepare();
+        this.soundsWereInitialized = true;
         this.enginePrepare();
     }
 
@@ -104,6 +105,7 @@ export class Game {
                 (game.player as any).update();
                 game.platforms.update();
 
+                //check collisions
                 game.quadtree.clear();
                 game.quadtree.add(game.platforms.getAliveObjects());
                 let objects = game.quadtree.get(game.player);
@@ -112,45 +114,26 @@ export class Game {
                 var i = -1;
                 while (!wasCollision && ++i < objects.length) {
                     let obj = objects[i];
-                    if (obj.type === 'platform' && obj.collidesWith(game.player)) {
-                        game.player.jump();
-                        obj.dy = Config.PLATFORM_AFTERJUMP_SPEED;
-                        (obj as any).playAnimation('connected');
-                        obj.underTension = true;
-                        obj.isConnectedWithPlayer = true;
-                        game.player.preLastPlatform = game.player.lastPlatform;
-                        game.player.lastPlatform = obj;
-                        game.player.lastPlatform.wasRegenerated = false;
-
-                        if (game.player.preLastPlatform) {
-                            // console.log('has prelast');
-                            game.player.preLastPlatform.isConnectedWithPlayer = false;
-                            game.player.preLastPlatform.wasRegenerated = false;
-                            if (game.player.preLastPlatform.id != game.player.lastPlatform.id)
-                                (game.player.preLastPlatform as any).playAnimation('charged');
-                        }
-                        game.player.lastPlatform.inConnection = game.player.preLastPlatform;
-                        if (game.player.preLastPlatform) game.player.preLastPlatform.outConnection = game.player.lastPlatform;
-                    }
+                    if (obj.type === 'platform' && obj.collidesWith(game.player))
+                        game.player.jumpOffPlatform(obj);
                 }
 
                 //generate new platforms
                 for (var i = 0; i <= game.platforms.maxSize - game.platforms.getAliveObjects().length; i++)
-                game.platforms.get(Utils.spawnPlatform(game, true));
-
+                    game.platforms.get(Utils.spawnPlatform(game, true));
             },
             render: function () {
                 game.background.context.save();
-                game.background.context.clearRect(0,0,Config.GAME_WIDTH,Config.GAME_HEIGHT);
+                game.background.context.clearRect(0, 0, Config.GAME_WIDTH, Config.GAME_HEIGHT);
 
                 game.ui.context.save();
-                game.ui.context.clearRect(0,0,Config.GAME_WIDTH,Config.GAME_HEIGHT);
+                game.ui.context.clearRect(0, 0, Config.GAME_WIDTH, Config.GAME_HEIGHT);
 
                 (game.player as any).render();
                 game.platforms.render();
 
                 game.background.context.restore();
-                game.ui.context.restore();             
+                game.ui.context.restore();
             }
         });
 

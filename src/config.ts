@@ -1,8 +1,6 @@
 export class Config {
-  // public static GAME_SCALE_FACTOR: number = 9 / 16;
   public static GAME_HEIGHT: number = 640;
   public static GAME_WIDTH: number = 360;
-  public static GAME_MAX_WIDTH: number = 640;
 
   public static WORLD_FRICTION_FACTOR: number = 0.5;
   public static WORLD_GRAVITY_FACTOR: number = 0.5;

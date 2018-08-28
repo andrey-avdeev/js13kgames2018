@@ -1,14 +1,35 @@
 body{
-    background-color: rgb(41, 41, 41);
-    border: tomato;
-    border-width: 1px;
+    background-color: black;
+}
+
+#content{
+    position:relative;
     margin:0 0 0 0;
+    border: 2px solid beige;
+    width: 100%;
+    margin: 0 auto;
+    background: rgb(44, 44, 44);
+}
+canvas{
+    position: absolute;
+    left: 0px;
+    top:0px;
+}
+#background{
+    z-index: 1;
+}
+#foreground{
+    z-index: 2;
+}
+#ui{
+    z-index: 3;
 }
 
 .loading {
     position: absolute;
     margin:0 0 0 0;
     color: rgb(255, 255, 255);
+    color: rgb(0, 78, 151);
     font-family: Helvetica, sans-serif;
     font-size: 30px;
     cursor: default;

@@ -47,6 +47,7 @@ export class Player extends Sprite {
     public lastPlatform: Platform;
     public context: CanvasRenderingContext2D;
     public connectionWidth: number = 1;
+    public blue: number = 256;
     public connectionIncrementFactor: number = 1;
 
     public update(dt) {
@@ -56,14 +57,8 @@ export class Player extends Sprite {
         this.updateMoving();
         this.applyForces();
         this.calculateAltitudes();
+        this.updateConnectionLine();
 
-        let game = this.game;
-        setTimeout(() => {
-            if (game.player.connectionWidth > 6 || game.player.connectionWidth <= 0)
-                game.player.connectionIncrementFactor *= -1;
-
-            game.player.connectionWidth += 1 * game.player.connectionIncrementFactor;
-        },2000)
 
         //TODO - to be removed
         if (this.game.engine.keys.pressed('space') || this.altitude <= 0) this.jump();
@@ -73,7 +68,7 @@ export class Player extends Sprite {
         (this as any)._ca.render(this as any);
 
         if (this.lastPlatform) {
-            this.game.background.context.strokeStyle = 'rgb(0, 78, 151)';
+            this.game.background.context.strokeStyle = 'rgb(0, 30,' + Math.round(this.blue / this.connectionWidth) + ')';
             this.game.background.context.lineWidth = this.connectionWidth;
 
             this.game.background.context.beginPath();
@@ -124,5 +119,36 @@ export class Player extends Sprite {
     public calculateAltitudes() {
         this.previousMaxAltitude = this.lastMaxAltitude;
         this.lastMaxAltitude = (this.altitude > this.lastMaxAltitude) ? this.altitude : this.lastMaxAltitude;
+    }
+
+    public updateConnectionLine() {
+        let game = this.game;
+        setTimeout(() => {
+            if (game.player.connectionWidth > 5 || game.player.connectionWidth <= 0)
+                game.player.connectionIncrementFactor *= -1;
+
+            game.player.connectionWidth += 1 * game.player.connectionIncrementFactor;
+        }, 2000)
+    }
+
+    public jumpOffPlatform(platform: Platform) {
+        this.jump();
+        platform.dy = Config.PLATFORM_AFTERJUMP_SPEED;
+        (platform as any).playAnimation('connected');
+        platform.underTension = true;
+        platform.isConnectedWithPlayer = true;
+        this.preLastPlatform = this.lastPlatform;
+        this.lastPlatform = platform;
+        this.lastPlatform.wasRegenerated = false;
+
+        if (this.preLastPlatform) {
+            this.preLastPlatform.isConnectedWithPlayer = false;
+            this.preLastPlatform.wasRegenerated = false;
+            if (this.preLastPlatform.id != this.lastPlatform.id)
+                (this.preLastPlatform as any).playAnimation('charged');
+        }
+        this.lastPlatform.inConnection = this.preLastPlatform;
+        if (this.preLastPlatform)
+            this.preLastPlatform.outConnection = this.lastPlatform;
     }
 }

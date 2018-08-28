@@ -38,7 +38,7 @@ export class Platform extends Sprite {
                 }
             }
         });
-        
+
         this.animations = spriteSheet.animations;
     }
 
@@ -47,6 +47,10 @@ export class Platform extends Sprite {
     public inConnection: Platform = null;
     public outConnection: Platform = null;
     public wasRegenerated: boolean = true;
+
+    public connectionWidth: number = 1;
+    public green: number = 200;
+    public connectionIncrementFactor: number = 1;
 
     public update(dt) {
         if ((this as any)._ca) (this as any)._ca.update(dt);
@@ -66,6 +70,8 @@ export class Platform extends Sprite {
                     this.color = 'red';
                 }
             }
+
+            this.updateConnectionLine();
         }
     }
 
@@ -91,17 +97,26 @@ export class Platform extends Sprite {
     public destroy() { this.ttl = 0; }
 
     public render() {
-        // (this as any).draw();
         (this as any)._ca.render(this as any);
 
         if (this.outConnection && !this.outConnection.wasRegenerated) {
-            this.game.background.context.strokeStyle = 'green';
-            this.game.background.context.lineWidth = 2;
+            this.game.background.context.strokeStyle = 'rgb(0,'+ Math.round(this.green / this.connectionWidth) + ',0)';
+            this.game.background.context.lineWidth = this.connectionWidth;
 
             this.game.background.context.beginPath();
             this.game.background.context.moveTo(this.outConnection.x + 7, this.outConnection.y + 7);
             this.game.background.context.lineTo(this.x + 42, this.y + 7);
             this.game.background.context.stroke();
         }
+    }
+
+    public updateConnectionLine() {
+        let platform = this;
+        setTimeout(() => {
+            if (platform.connectionWidth > 3 || platform.connectionWidth <= 0)
+                platform.connectionIncrementFactor *= -1;
+
+            platform.connectionWidth += 1 * platform.connectionIncrementFactor;
+        }, 2000)
     }
 }

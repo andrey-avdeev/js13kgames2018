@@ -4,32 +4,28 @@ import { Game } from './game';
 
 export class Utils {
     public static spawnPlatform = (game: Game, isRegenerated: boolean = false): Platform => {
-        var platform = null;
+        let height = Math.floor(Math.random() * Config.GAME_HEIGHT * 2) + 0;
+        let altitude = null;
+        let x = Math.floor(Math.random() * (Config.GAME_WIDTH - Config.PLATFORM_BASE_WIDTH)) + 0;
+        let y = null;
 
         if (!isRegenerated) {
-            let height = Math.floor(Math.random() * Config.GAME_HEIGHT * 2) + 0
-            platform = new Platform(
-                game,
-                Math.floor(Math.random() * (Config.GAME_WIDTH - Config.PLATFORM_BASE_WIDTH)) + 0,
-                Config.GAME_HEIGHT - height,
-                0,
-                0,
-                Infinity,
-                height
-            )
+            altitude = height;
+            y = Config.GAME_HEIGHT - height;
         } else {
-            let height = Math.floor(Math.random() * Config.GAME_HEIGHT * 2) + 0;
-            let altitude = game.player.altitude + Config.GAME_HEIGHT / 2 + height;
-            platform = new Platform(
-                game,
-                Math.floor(Math.random() * (Config.GAME_WIDTH - Config.PLATFORM_BASE_WIDTH)) + 0,
-                game.player.altitude - altitude + Config.GAME_HEIGHT / 2,
-                0,
-                0,
-                Infinity,
-                altitude
-            )
+            altitude = game.player.altitude + Config.GAME_HEIGHT / 2 + height;
+            y = game.player.altitude - altitude + Config.GAME_HEIGHT / 2;
         }
+
+        let platform = new Platform(
+            game,
+            Math.floor(Math.random() * (Config.GAME_WIDTH - Config.PLATFORM_BASE_WIDTH)) + 0,
+            game.player.altitude - altitude + Config.GAME_HEIGHT / 2,
+            0,
+            0,
+            Infinity,
+            altitude
+        );
         platform.id = Utils.uuid();
         platform = game.engine.sprite(platform);
         (platform as any).playAnimation('idle');
