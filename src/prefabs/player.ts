@@ -54,9 +54,11 @@ export class Player extends Sprite {
     public connectionIncrementFactor: number = 1;
 
     public jumps: number = 0;
-    public connectedPlatforms: number = 0;
+    public connectedPlatforms: number = 1;
     public lives: number = 0;
     public killedEnemies: number = 0;
+
+    public isPositionRefreshing: boolean = false;
 
     public update(dt) {
         if ((this as any)._ca) (this as any)._ca.update(dt);
@@ -67,18 +69,27 @@ export class Player extends Sprite {
         this.calculateAltitudes();
         this.updateConnectionLine();
 
-
-        //TODO - to be removed
-        if (this.game.engine.keys.pressed('space') || this.altitude <= 0) this.jump();
+        if (this.altitude <= 0 || this.lastMaxAltitude - Config.GAME_HEIGHT > this.altitude) {
+            this.kill();
+            if (this.lastPlatform && this.lives > 0) {
+                this.refreshPosition();
+            } else {
+                this.game.gameOver();
+            }
+        }
     }
 
     public render() {
         (this as any)._ca.render(this as any);
 
         if (this.lastPlatform) {
-            this.game.background.context.strokeStyle = 'rgb(0, 30,' + Math.round(this.blue / this.connectionWidth) + ')';
-            this.game.background.context.lineWidth = this.connectionWidth;
+            if (!this.game.isExplosionPulseState) {
+                this.game.background.context.strokeStyle = 'rgb(0, 30,' + Math.round(this.blue / this.connectionWidth) + ')';
+            } else {
+                this.game.background.context.strokeStyle = 'red';
+            }
 
+            this.game.background.context.lineWidth = this.connectionWidth;
             this.game.background.context.beginPath();
             this.game.background.context.moveTo(this.lastPlatform.x + 42, this.lastPlatform.y + 7);
             this.game.background.context.lineTo(this.x + 13, this.y + 22);
@@ -103,6 +114,8 @@ export class Player extends Sprite {
     public updateMoving() {
         this.x += this.dx;
         this.altitude += this.dy;
+
+        if (this.dy <= 0) this.isPositionRefreshing = false;
     }
 
     public moveLeft() { this.dx -= Config.PLAYER_HORIZONTAL_SPEED; }
@@ -142,7 +155,9 @@ export class Player extends Sprite {
 
     public jumpOffPlatform(platform: Platform) {
         this.jump();
-        platform.dy = Config.PLATFORM_AFTERJUMP_SPEED;
+        if (!platform.isUnmovable)
+            platform.dy = Config.PLATFORM_AFTERJUMP_SPEED;
+
         (platform as any).playAnimation('connected');
         platform.underTension = true;
         platform.isConnectedWithPlayer = true;
@@ -164,6 +179,28 @@ export class Player extends Sprite {
     }
 
     public killEnemy(enemy: Enemy) {
+        this.jump();
         this.killedEnemies += 1;
+        enemy.explode();
+    }
+
+    public kill() {
+        this.lives -= 1;
+    }
+
+    public refreshPosition() {
+        console.log('refresh position', this.lives);
+        let x0 = this.x;
+        let x1 = this.lastPlatform.x;
+        let y0 = this.altitude;
+        let y1 = this.lastPlatform.altitude;
+
+        this.dx = (x1 - x0) * Config.PLAYER_HORIZONTAL_SPEED * 2 / Config.GAME_WIDTH;
+        this.dy = (y1 - y0) * Config.PLAYER_JUMP_SPEED * 4 / Config.GAME_HEIGHT;
+        this.isPositionRefreshing = true;
+    }
+
+    public explosionPulse() {
+
     }
 }

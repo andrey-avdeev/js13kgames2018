@@ -1,6 +1,7 @@
 import { Platform } from './prefabs/platform';
 import { Config } from './config';
 import { Game } from './game';
+import { Enemy } from './prefabs/enemy';
 
 export class Utils {
     public static spawnPlatform = (game: Game, isRegenerated: boolean = false): Platform => {
@@ -19,8 +20,8 @@ export class Utils {
 
         let platform = new Platform(
             game,
-            Math.floor(Math.random() * (Config.GAME_WIDTH - Config.PLATFORM_BASE_WIDTH)) + 0,
-            game.player.altitude - altitude + Config.GAME_HEIGHT / 2,
+            x,
+            y,
             0,
             0,
             Infinity,
@@ -31,6 +32,29 @@ export class Utils {
         (platform as any).playAnimation('idle');
 
         return platform;
+    }
+
+    public static spawnEnemy = (game: Game): Enemy => {
+        let height = Math.floor(Math.random() * Config.GAME_HEIGHT) + 0;
+        let altitude = game.player.altitude + Config.GAME_HEIGHT / 2 + height;
+        let x = Math.floor(Math.random() * (Config.GAME_WIDTH - Config.ENEMY_BASE_WIDTH)) + 0;
+        let y = game.player.altitude - altitude + Config.GAME_HEIGHT / 2;
+        let dx=0;
+        let dy = Math.floor(Math.random() * Config.ENEMY_SPEED * 2) +0;
+
+        let enemy = new Enemy(
+            game,
+            x,
+            y,
+            dx,
+            dy,
+            Infinity,
+            altitude
+        );
+
+        enemy = game.engine.sprite(enemy);
+        (enemy as any).playAnimation('idle');
+        return enemy;
     }
 
     public static initTouchControl = (game: Game): void => {

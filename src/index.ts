@@ -44,8 +44,8 @@ window.onload = () => {
   //loading message
   let initAndStart = () => {
     if (game.soundsWereInitialized && game.imagesWereInitialized) {
-      document.getElementById('loading').style.display = 'none';
-
+      document.getElementById('about').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
       game.init();
       game.start();
     } else {
@@ -53,5 +53,15 @@ window.onload = () => {
     }
   }
 
-  setTimeout(initAndStart, 100);
+  setTimeout(() => {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('story').style.display = 'block';
+
+    setTimeout(() => {
+      document.getElementById('story').style.display = 'none';
+      document.getElementById('about').style.display = 'block';
+
+      setTimeout(initAndStart,3000)
+    }, 3000);
+  }, 3000);
 };

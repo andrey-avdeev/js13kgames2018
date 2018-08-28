@@ -10,16 +10,55 @@
 
 <body>
     <div>
-        <div id="content">
+        <div class="loading" id="loading">
+            <p>LOADING</p>
+            <div class="lds-spinner">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+        <div id="story" style="display:none;">
+            <p>Blackout</p>
+            <div class="separator"></div>
+            <div class="small-text">
+                <p>All computation platforms are offline</p>
+                <p>Servant drones gone crazy</p>
+                <p>You are small repair robot and you should fix these platforms</p>
+                <p>Jump on platforms as much as possible, connect them together into new computation cluster</p>
+                <p>Destroy drones - they will pulse shock wave through your new network</p>
+            </div>
+        </div>
+
+        <div id="about" style="display:none;">
+            <div class="separator"></div>
+            <div class="small-text">
+                <p>Use left\right arrows or touchcreen to control a repair robot</p>
+                <p>Additional live for hundred connected platforms</p>
+                <p>Jump on drones to destroy them</p>
+                <p>Score = killedDrones + connectedPlatforms</p>
+            </div>
+            <div class="separator"></div>
+            <div class="separator"></div>
+            <p class="small-text">Game was made by Andrew Avdeev specially for Js13kgames2018 contest</p>
+        </div>
+
+        <div id="content" style="display:none;">
             <canvas id="background"></canvas>
             <canvas id="foreground"></canvas>
             <canvas id="ui"></canvas>
         </div>
-        <div class="loading" id="loading">LOADING...
-            <p>Please wait</p>
 
-            <p>Game was made by Andrew Avdeev specially for Js13kgames2018 contest</p>
-        </div>
     </div>
 </body>
 

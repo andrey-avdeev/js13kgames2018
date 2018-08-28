@@ -4,6 +4,8 @@ import { Config } from "./config";
 export class Information {
 
     constructor(public game: Game) {
+        this.highScore = game.engine.store.get('highScore');
+        if (!this.highScore) this.highScore = 0;
     }
 
     public altitude: number = 0;
@@ -11,6 +13,8 @@ export class Information {
     public connectedPlatforms: number = 0;
     public lives: number = 0;
     public killedEnemies: number = 0;
+    public score: number = 0;
+    public highScore: number;
 
     public update() {
         this.altitude = Math.round(this.game.player.lastMaxAltitude);
@@ -18,15 +22,26 @@ export class Information {
         this.connectedPlatforms = this.game.player.connectedPlatforms;
         this.lives = this.game.player.lives;
         this.killedEnemies = this.game.player.killedEnemies;
+        this.score = this.killedEnemies + this.connectedPlatforms;
+        if (this.score > 0 && this.score % 10 == 0) {
+            this.score++;
+            this.game.player.lives++;
+        }
+
+        if (this.highScore < this.score) {
+            this.highScore = this.score;
+            this.game.engine.store.set('highScore', this.highScore);
+        }
     }
 
     public render() {
         this.game.ui.context.font = "10px Arial";
         this.game.ui.context.fillStyle = "white";
         this.game.ui.context.textAlign = "center";
-        this.game.ui.context.fillText("lives: " + this.lives, Config.GAME_WIDTH / 2 - Config.GAME_WIDTH / 4, 20);
+        this.game.ui.context.fillText("lives: " + this.lives, Config.GAME_WIDTH / 2 - Config.GAME_WIDTH / 3, 20);
         let alt = this.altitude < 1000 ? this.altitude : Math.round(this.altitude / 1000) + 'k';
-        this.game.ui.context.fillText("alt: " + alt, Config.GAME_WIDTH / 2, 20);
-        this.game.ui.context.fillText("score: " + this.connectedPlatforms, Config.GAME_WIDTH / 2 + Config.GAME_WIDTH / 4, 20);
+        this.game.ui.context.fillText("alt: " + alt, Config.GAME_WIDTH / 2 - Config.GAME_WIDTH / 5, 20);
+        this.game.ui.context.fillText("score: " + this.score, Config.GAME_WIDTH / 2 + Config.GAME_WIDTH / 6, 20);
+        this.game.ui.context.fillText("high score: " + this.highScore, Config.GAME_WIDTH / 2 + Config.GAME_WIDTH / 3, 20);
     }
 }

@@ -13,7 +13,7 @@ export class Platform extends Sprite {
         public altitude: number,
         public isConnectedWithPlayer: boolean = false
     ) {
-        super(game, x, y, dx, dy, null, null, 'red', Config.PLATFORM_BASE_WIDTH, Config.PLATFORM_BASE_HEIGHT, "platform", ttl);
+        super(game, x, y, dx, dy, null, null, 'orange', Config.PLATFORM_BASE_WIDTH, Config.PLATFORM_BASE_HEIGHT, "platform", ttl);
 
         let spriteSheet = game.engine.spriteSheet({
             image: game.engine.assets.images.platform,
@@ -42,7 +42,7 @@ export class Platform extends Sprite {
     }
 
     public underTension: boolean = false;
-    public onScreen: boolean = true;
+    public onScreen: boolean = false;
     public inConnection: Platform = null;
     public outConnection: Platform = null;
     public wasRegenerated: boolean = true;
@@ -50,6 +50,7 @@ export class Platform extends Sprite {
     public connectionWidth: number = 1;
     public green: number = 200;
     public connectionIncrementFactor: number = 1;
+    public isUnmovable: boolean = false;
 
     public update(dt) {
         if ((this as any)._ca) (this as any)._ca.update(dt);
@@ -76,11 +77,16 @@ export class Platform extends Sprite {
 
     public outOfBorders() {
         if (this.altitude + Config.GAME_HEIGHT <= this.game.player.altitude
-            && !this.isConnectedWithPlayer) {
+            && !this.isConnectedWithPlayer && this.id != this.game.player.lastPlatform.id) {
             this.onScreen = false;
             this.destroy();
             return true;
         } else {
+            if (this.game.player.altitude - this.altitude < Config.GAME_HEIGHT / 2) {
+                this.onScreen = true;
+            } else {
+                this.onScreen = false;
+            }
             return false;
         }
     }
@@ -99,9 +105,13 @@ export class Platform extends Sprite {
         (this as any)._ca.render(this as any);
 
         if (this.outConnection && !this.outConnection.wasRegenerated) {
-            this.game.background.context.strokeStyle = 'rgb(0,'+ Math.round(this.green / this.connectionWidth) + ',0)';
-            this.game.background.context.lineWidth = this.connectionWidth;
+            if (!this.game.isExplosionPulseState) {
+                this.game.background.context.strokeStyle = 'rgb(0,' + Math.round(this.green / this.connectionWidth) + ',0)';
+            } else {
+                this.game.background.context.strokeStyle = 'red';
+            }
 
+            this.game.background.context.lineWidth = this.connectionWidth;
             this.game.background.context.beginPath();
             this.game.background.context.moveTo(this.outConnection.x + 7, this.outConnection.y + 7);
             this.game.background.context.lineTo(this.x + 42, this.y + 7);
@@ -117,5 +127,12 @@ export class Platform extends Sprite {
 
             platform.connectionWidth += 1 * platform.connectionIncrementFactor;
         }, 2000)
+    }
+
+    public explosionPulse() {
+        let game = this.game;
+        game.isExplosionPulseState = true;
+
+        setTimeout(() => game.isExplosionPulseState = false, Config.PLATFORM_EXPLOSION_PULSE_TIMEOUT);
     }
 }
