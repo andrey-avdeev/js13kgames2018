@@ -27,6 +27,7 @@ export class Game {
 
     public cPlayer: any;
     public song: any;
+    public audio: HTMLAudioElement;
 
     public soundsWereInitialized: boolean = false;
     public imagesWereInitialized: boolean = false;
@@ -64,10 +65,9 @@ export class Game {
 
             if (game.soundsWereInitialized) {
                 var wave = cplayer.createWave();
-                var audio = document.createElement("audio");
-                audio.src = URL.createObjectURL(new Blob([wave], { type: "audio/wav" }));
-                audio.loop = true;
-                audio.play();
+                game.audio = document.createElement("audio");
+                game.audio.src = URL.createObjectURL(new Blob([wave], { type: "audio/wav" }));
+                game.audio.loop = true;
             }
         }, 0);
     }
@@ -157,26 +157,26 @@ export class Game {
         document.getElementById('content').style.display = 'none';
         document.getElementById('gameover').style.display = 'block';
 
-        let removeHandlers = ()=>{
+        let removeHandlers = () => {
             document.onkeydown = null;
             document.ontouchstart = null;
         }
 
-        setTimeout(()=>{
+        setTimeout(() => {
             document.onkeydown = (e) => {
                 removeHandlers();
-    
+
                 let event = e || window.event as KeyboardEvent;
-    
+
                 if (event.keyCode == 37 || event.keyCode == 39)
                     game.restart();
             };
-    
-            document.ontouchstart = (e)=>{
+
+            document.ontouchstart = (e) => {
                 removeHandlers();
                 game.restart();
             }
-        },1000);
+        }, 1000);
     }
 
     public restart() {
@@ -187,6 +187,7 @@ export class Game {
     }
 
     public start() {
+        this.audio.play();
         (this.player as any).playAnimation('idle');
 
         let game = this;
@@ -276,6 +277,8 @@ export class Game {
     }
 
     public stop() {
+        this.audio.pause();
+        this.audio.currentTime = 0;
         this.isRunning = false;
         this.loop.stop();
     }

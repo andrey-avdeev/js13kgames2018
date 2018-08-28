@@ -17,16 +17,16 @@ let htmlConfig = {
   template: './index.html',
   inject: 'body',
   inlineSource: isProduction && '\.(js|css)$',
-  minify: {
-    removeAttributeQuotes: isProduction,
-    collapseWhitespace: isProduction,
-    html5: isProduction,
-    minifyCSS: isProduction,
-    minifyJS: isProduction,
-    minifyURLs: isProduction,
-    removeComments: isProduction,
-    removeEmptyAttributes: isProduction
-  },
+  // minify: {
+  //   removeAttributeQuotes: isProduction,
+  //   collapseWhitespace: isProduction,
+  //   html5: isProduction,
+  //   minifyCSS: isProduction,
+  //   minifyJS: isProduction,
+  //   minifyURLs: isProduction,
+  //   removeComments: isProduction,
+  //   removeEmptyAttributes: isProduction
+  // },
   hash: false
 };
 
@@ -41,15 +41,15 @@ let config = {
       new UglifyJsPlugin({
         cache: true,
         parallel: true,
-        uglifyOptions: {
-          compress: true,
-          ecma: 5,
-          mangle: true,
-          output: {
-            comments: false,
-            beautify: false
-          },
-        },
+        // uglifyOptions: {
+        //   compress: true,
+        //   ecma: 5,
+        //   mangle: true,
+        //   output: {
+        //     comments: false,
+        //     beautify: false
+        //   },
+        // },
         sourceMap: true,
         extractComments:true
       })

@@ -38,7 +38,7 @@ canvas{
     font-size: 20px;
     cursor: default;
   }
-#story,#about,#gameover{
+#story,#about,#gameover,#ready-screen{
     color: rgb(255, 255, 255);
     font-family: Helvetica, sans-serif;
     text-align: center;

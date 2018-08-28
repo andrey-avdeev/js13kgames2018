@@ -195,7 +195,7 @@ export class Player extends Sprite {
         let y1 = this.lastPlatform.altitude;
 
         this.dx = (x1 - x0) * Config.PLAYER_HORIZONTAL_SPEED * 2 / Config.GAME_WIDTH;
-        this.dy = (y1 - y0) * Config.PLAYER_JUMP_SPEED * 4 / Config.GAME_HEIGHT;
+        this.dy = (y1 - y0) * Config.PLAYER_JUMP_SPEED * Config.PLAYER_POSITION_REFRESH_FACTOR / Config.GAME_HEIGHT;
         this.isPositionRefreshing = true;
     }
 

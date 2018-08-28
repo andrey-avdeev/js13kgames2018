@@ -44,7 +44,7 @@ window.onload = () => {
   //loading message
   let initAndStart = () => {
     if (game.soundsWereInitialized && game.imagesWereInitialized) {
-      document.getElementById('about').style.display = 'none';
+      document.getElementById('ready-screen').style.display = 'none';
       document.getElementById('content').style.display = 'block';
       game.init();
       game.start();
@@ -61,7 +61,24 @@ window.onload = () => {
       document.getElementById('story').style.display = 'none';
       document.getElementById('about').style.display = 'block';
 
-      setTimeout(initAndStart,3000)
+      setTimeout(() => {
+        document.getElementById('about').style.display = 'none';
+        document.getElementById('ready-screen').style.display = 'block';
+
+        let removeHandlers = () => {
+          document.onkeydown = null;
+          document.ontouchstart = null;
+        }
+
+        document.onkeydown = (e) => {
+          removeHandlers();
+          initAndStart();
+        };
+        document.ontouchstart = (e) => {
+          removeHandlers();
+          initAndStart();
+        }
+      }, 1000);
     }, 3000);
   }, 3000);
 };
