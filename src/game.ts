@@ -48,8 +48,7 @@ export class Game {
     public isRunning: boolean = false;
 
     public prepare() {
-        // this.soundPrepare();
-        this.soundsWereInitialized = true;
+        this.soundPrepare();
         this.enginePrepare();
     }
 
@@ -163,19 +162,21 @@ export class Game {
             document.ontouchstart = null;
         }
 
-        document.onkeydown = (e) => {
-            removeHandlers();
-
-            let event = e || window.event as KeyboardEvent;
-
-            if (event.keyCode == 37 || event.keyCode == 39)
+        setTimeout(()=>{
+            document.onkeydown = (e) => {
+                removeHandlers();
+    
+                let event = e || window.event as KeyboardEvent;
+    
+                if (event.keyCode == 37 || event.keyCode == 39)
+                    game.restart();
+            };
+    
+            document.ontouchstart = (e)=>{
+                removeHandlers();
                 game.restart();
-        };
-        
-        document.ontouchstart = (e)=>{
-            removeHandlers();
-            game.restart();
-        }
+            }
+        },1000);
     }
 
     public restart() {

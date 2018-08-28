@@ -15,7 +15,7 @@ export class Config {
   public static PLATFORM_LIVE_GAP: 2;
   public static PLATFORM_BASE_WIDTH: number = 50;
   public static PLATFORM_BASE_HEIGHT: number = 16;
-  public static PLATFORM_POOL_MAX_SIZE: number = 28;
+  public static PLATFORM_POOL_MAX_SIZE: number = 32;
   public static PLATFORM_AFTERJUMP_SPEED: number = 13;
   public static PLATFORM_EXPLOSION_PULSE_TIMEOUT: number = 200;
 
