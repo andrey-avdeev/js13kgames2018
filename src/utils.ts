@@ -40,8 +40,8 @@ export class Utils {
         let altitude = game.player.altitude + Config.GAME_HEIGHT / 2 + height;
         let x = Math.floor(Math.random() * (Config.GAME_WIDTH - Config.ENEMY_BASE_WIDTH)) + 0;
         let y = game.player.altitude - altitude + Config.GAME_HEIGHT / 2;
-        let dx=0;
-        let dy = Math.floor(Math.random() * Config.ENEMY_SPEED * 2) +0;
+        let dx = 0;
+        let dy = Math.floor(Math.random() * Config.ENEMY_SPEED * 2) + 1;
 
         let enemy = new Enemy(
             game,
@@ -54,7 +54,7 @@ export class Utils {
         );
 
         enemy = game.engine.sprite(enemy);
-        
+
         // (enemy as any).playAnimation('idle');
         return enemy;
     }
