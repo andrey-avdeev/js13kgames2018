@@ -2,7 +2,7 @@ import { Sprite } from "./sprite";
 import { Game } from "../game";
 import Config from "../config";
 
-export class Enemy extends Sprite{
+export class Enemy extends Sprite {
 
     constructor(
         game: Game,
@@ -12,23 +12,21 @@ export class Enemy extends Sprite{
         dy: number,
         ttl: number,
         public altitude: number
-    ){
-        super(game, x, y, dx, dy, null, null, 'red', Config.ENEMY_BASE_WIDTH, Config.ENEMY_BASE_WIDTH, "enemy", ttl);
-
-        this.image = game.engine.assets.images.enemy;
+    ) {
+        super(game, x, y, dx, dy, game.engine.assets.images.enemy, 'red', Config.ENEMY_BASE_WIDTH, Config.ENEMY_BASE_WIDTH, "enemy", ttl);
     }
 
     public onScreen: boolean = true;
 
-    public destroy() { 
-        this.ttl = 0; 
+    public destroy() {
+        this.ttl = 0;
     }
-    
-    public explode(){
+
+    public explode() {
         this.destroy();
     }
 
-    public update(dt){
+    public update(dt) {
         if ((this as any)._ca) (this as any)._ca.update(dt);
         if (!this.outOfBorders()) {
             this.y = this.game.player.altitude - this.altitude + Config.GAME_HEIGHT / 2;
@@ -41,7 +39,7 @@ export class Enemy extends Sprite{
     }
 
     public outOfBorders() {
-        if (this.altitude + Config.GAME_HEIGHT <= this.game.player.altitude) {
+        if (this.altitude + Config.GAME_HEIGHT * Config.ENEMY_LIVE_GAP <= this.game.player.altitude) {
             this.onScreen = false;
             this.destroy();
             return true;
@@ -50,7 +48,7 @@ export class Enemy extends Sprite{
         }
     }
 
-    public render(){
+    public render() {
         (this as any).draw();
     }
 }

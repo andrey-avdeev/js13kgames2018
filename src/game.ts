@@ -6,7 +6,7 @@ import { RenderingMeta } from './rendering-meta';
 import { Information } from './information';
 import { Enemy } from './prefabs/enemy';
 
-
+//game itself with loop and global properties
 export class Game {
     constructor(public canvases: any) {
         this.engine = (window as any).kontra;
@@ -105,6 +105,7 @@ export class Game {
 
         //initial platform generation
         let floorCount = Math.round(Config.GAME_WIDTH / Config.PLATFORM_BASE_WIDTH);
+        
         //ground platforms
         for (var i = 0; i <= floorCount; i++) {
             let platform = new Platform(

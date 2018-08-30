@@ -8,7 +8,6 @@ export abstract class Sprite {
         public dx: number,
         public dy: number,
         public image: HTMLImageElement,
-        public animations:any=null,
         public color: string,
         public width: number,
         public height: number,
@@ -16,5 +15,4 @@ export abstract class Sprite {
         public ttl: number = Infinity
     ) {
     }
-    public id: string = null;
 }

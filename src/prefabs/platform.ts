@@ -13,9 +13,7 @@ export class Platform extends Sprite {
         public altitude: number,
         public isConnectedWithPlayer: boolean = false
     ) {
-        super(game, x, y, dx, dy, null, null, 'orange', Config.PLATFORM_BASE_WIDTH, Config.PLATFORM_BASE_HEIGHT, "platform", ttl);
-
-        this.image = game.engine.assets.images.platform;
+        super(game, x, y, dx, dy, game.engine.assets.images.platform, 'orange', Config.PLATFORM_BASE_WIDTH, Config.PLATFORM_BASE_HEIGHT, "platform", ttl);
     }
 
     public underTension: boolean = false;
@@ -29,6 +27,7 @@ export class Platform extends Sprite {
     public connectionIncrementFactor: number = 1;
     public isUnmovable: boolean = false;
     public animation: string = 'idle';
+    public id: string = null;
 
     public update(dt) {
         if ((this as any)._ca) (this as any)._ca.update(dt);
@@ -54,7 +53,7 @@ export class Platform extends Sprite {
     }
 
     public outOfBorders() {
-        if (this.altitude + Config.GAME_HEIGHT <= this.game.player.altitude
+        if (this.altitude + Config.GAME_HEIGHT * Config.PLATFORM_LIVE_GAP <= this.game.player.altitude
             && !this.isConnectedWithPlayer && this.id != this.game.player.lastPlatform.id) {
             this.onScreen = false;
             this.destroy();

@@ -1,6 +1,9 @@
 import { Game } from "./game";
 import { Config } from "./config";
 
+/**
+ * Score calculation and other statistics.
+ */
 export class Information {
 
     constructor(public game: Game) {
@@ -19,7 +22,6 @@ export class Information {
     public killedEnemies: number = 0;
     public score: number = 0;
     public highScore: number;
-
 
     public update() {
         this.altitude = Math.round(this.game.player.lastMaxAltitude);

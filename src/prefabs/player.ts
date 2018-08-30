@@ -14,11 +14,9 @@ export class Player extends Sprite {
         dy: number,
         public altitude: number
     ) {
-        super(game, x, y, dx, dy, null, null, 'black', Config.PLAYER_BASE_WIDTH, Config.PLAYER_BASE_HEIGHT, "player");
+        super(game, x, y, dx, dy, game.engine.assets.images.player, 'black', Config.PLAYER_BASE_WIDTH, Config.PLAYER_BASE_HEIGHT, "player");
 
         this.lives = Config.PLAYER_LIVES;
-
-        this.image = this.game.engine.assets.images.player;
     }
 
     public force: number;
@@ -178,9 +176,5 @@ export class Player extends Sprite {
         this.dx = (x1 - x0) * Config.PLAYER_HORIZONTAL_SPEED * 2 / Config.GAME_WIDTH;
         this.dy = (y1 - y0) * Config.PLAYER_JUMP_SPEED * Config.PLAYER_POSITION_REFRESH_FACTOR / Config.GAME_HEIGHT;
         this.isPositionRefreshing = true;
-    }
-
-    public explosionPulse() {
-
     }
 }

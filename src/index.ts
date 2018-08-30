@@ -2,16 +2,13 @@ import Config from './config';
 import './main.css';
 
 import { Game } from './game';
-import { Device } from './device';
 import { RenderingMeta } from './rendering-meta';
 
+//preparing for game start
 window.onload = () => {
-  //device configuration
-  let device = Device.init(window);
-
   //calculation of scale factor
-  let scaleX = device.width / Config.GAME_WIDTH;
-  let scaleY = device.height / Config.GAME_HEIGHT;
+  let scaleX = window.innerWidth / Config.GAME_WIDTH;
+  let scaleY = window.innerHeight / Config.GAME_HEIGHT;
   let scaleFactor = scaleX <= scaleY ? scaleX : scaleY;
 
   if (scaleFactor < 1) {
@@ -41,7 +38,7 @@ window.onload = () => {
   (window as any).game = game;
   game.prepare();
 
-  //loading message
+  //initialization delegate
   let initAndStart = () => {
     if (game.soundsWereInitialized && game.imagesWereInitialized) {
       document.getElementById('ready-screen').style.display = 'none';
@@ -53,10 +50,12 @@ window.onload = () => {
     }
   }
 
+  //display 'about' message
   setTimeout(() => {
     document.getElementById('story').style.display = 'none';
     document.getElementById('about').style.display = 'block';
 
+    //display ready-screen
     setTimeout(() => {
       document.getElementById('about').style.display = 'none';
       document.getElementById('ready-screen').style.display = 'block';
@@ -74,6 +73,6 @@ window.onload = () => {
         removeHandlers();
         initAndStart();
       }
-    }, 1000);
+    }, 3000);
   }, 3000);
 };
