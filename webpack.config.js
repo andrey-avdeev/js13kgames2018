@@ -81,7 +81,11 @@ let config = {
     new CopyWebpackPlugin([{
       from: './src/assets',
       to: './assets'
-    }]),
+    },
+  {
+    from: 'favicon.ico',
+    to: 'favicon.ico'
+  }]),
     new HtmlWebpackPlugin(htmlConfig),
     new HtmlWebpackInlineSourcePlugin(),
     new webpack.NoEmitOnErrorsPlugin()

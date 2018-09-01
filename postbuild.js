@@ -33,6 +33,4 @@ archive.append(
 
 archive.directory('./dist/assets/images', 'assets/images');
 
-
-
 archive.finalize()

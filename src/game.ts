@@ -151,17 +151,13 @@ export class Game {
     }
 
     public speedUpEnemyGeneration() {
-        if (this.enemyGenerationTimeout > Config.ENEMY_MIN_GENERATION_TIMEOUT) {
-            this.enemyGenerationTimeout -= 1;
-            // console.log('Frequency: ', this.enemyGenerationTimeout);
-        }
+        if (this.enemyGenerationTimeout > Config.ENEMY_MIN_GENERATION_TIMEOUT)
+            this.enemyGenerationTimeout -= Config.ENEMY_GENERATION_ACCELERATION;
     }
 
     public reducePlatforms() {
-        if (this.platforms.maxSize > Config.PLATFORM_POOL_MIN_SIZE) {
+        if (this.platforms.maxSize > Config.PLATFORM_POOL_MIN_SIZE)
             this.platforms.maxSize -= 1;
-            // console.log('MaxSize: ', this.platforms.maxSize);
-        }
     }
 
     public gameOver() {
