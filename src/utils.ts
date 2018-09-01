@@ -4,11 +4,14 @@ import { Game } from './game';
 import { Enemy } from './prefabs/enemy';
 
 export class Utils {
+
+    public static random = (a: number, b: number): number => Math.floor(Math.random() * b) + a;
+
     //platform factory method
     public static spawnPlatform = (game: Game, isRegenerated: boolean = false): Platform => {
-        let height = Math.floor(Math.random() * Config.GAME_HEIGHT * 2) + 0;
+        let height = Utils.random(0, Config.GAME_HEIGHT * 2);
         let altitude = null;
-        let x = Math.floor(Math.random() * (Config.GAME_WIDTH - Config.PLATFORM_BASE_WIDTH)) + 0;
+        let x = Utils.random(0, Config.GAME_WIDTH - Config.PLATFORM_BASE_WIDTH);
         let y = null;
 
         if (!isRegenerated) {
@@ -37,12 +40,12 @@ export class Utils {
 
     //enemy factory method
     public static spawnEnemy = (game: Game): Enemy => {
-        let height = Math.floor(Math.random() * Config.GAME_HEIGHT) + 0;
+        let height = Utils.random(0, Config.GAME_HEIGHT);
         let altitude = game.player.altitude + Config.GAME_HEIGHT / 2 + height;
-        let x = Math.floor(Math.random() * (Config.GAME_WIDTH - Config.ENEMY_BASE_WIDTH)) + 0;
+        let x = Utils.random(0, Config.GAME_WIDTH - Config.ENEMY_BASE_WIDTH);
         let y = game.player.altitude - altitude + Config.GAME_HEIGHT / 2;
         let dx = 0;
-        let dy = Math.floor(Math.random() * Config.ENEMY_SPEED * 2) + 1;
+        let dy = Utils.random(1, Config.ENEMY_SPEED * 2);
 
         let enemy = new Enemy(
             game,

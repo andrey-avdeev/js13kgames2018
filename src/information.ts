@@ -51,7 +51,7 @@ export class Information {
         this.score = this.killedEnemies + this.connectedPlatforms;
         if (this.score >= Config.GAME_EXTRA_LIVE_FACTOR && this.score % Config.GAME_EXTRA_LIVE_FACTOR == 0) {
             this.game.player.connectedPlatforms++;
-            this.game.player.lives += 1;
+            this.game.player.lives++;
         }
 
         if (this.highScore < this.score) {
@@ -82,12 +82,12 @@ export class Information {
         this.game.ui.context.fillRect(0, 0, Config.GAME_WIDTH, 30);
 
         this.game.ui.context.fillStyle = "white";
-        this.game.ui.context.fillText("lives: " + this.lives, Config.GAME_WIDTH / 2 - Config.GAME_WIDTH / 3, 20);
+        this.game.ui.context.fillText("lives: " + this.lives, Config.GAME_WIDTH / 2 - Config.GAME_WIDTH / 3, 18);
 
         this.game.ui.context.font = "10px Arial";
         let alt = this.altitude < 1000 ? this.altitude : Math.round(this.altitude / 1000) + 'k';
-        this.game.ui.context.fillText("alt: " + alt, Config.GAME_WIDTH / 2 - Config.GAME_WIDTH / 5, 20);
-        this.game.ui.context.fillText("score: " + this.score, Config.GAME_WIDTH / 2 + Config.GAME_WIDTH / 8, 20);
-        this.game.ui.context.fillText("high score: " + this.highScore, Config.GAME_WIDTH / 2 + Config.GAME_WIDTH / 3, 20);
+        this.game.ui.context.fillText("alt: " + alt, Config.GAME_WIDTH / 2 - Config.GAME_WIDTH / 5, 18);
+        this.game.ui.context.fillText("score: " + this.score, Config.GAME_WIDTH / 2 + Config.GAME_WIDTH / 8, 18);
+        this.game.ui.context.fillText("high score: " + this.highScore, Config.GAME_WIDTH / 2 + Config.GAME_WIDTH / 3, 18);
     }
 }
