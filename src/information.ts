@@ -60,19 +60,22 @@ export class Information {
         this.game.ui.context.fillStyle = "white";
         this.game.ui.context.textAlign = "center";
 
-        if(this.liveWasGained){
+        if (this.liveWasGained) {
             this.game.ui.context.font = "16px Arial";
             this.game.ui.context.fillStyle = "green";
         }
-        if(this.liveWasLost){
-            this.game.ui.context.font = "16px Arial";   
+        if (this.liveWasLost) {
+            this.game.ui.context.font = "16px Arial";
             this.game.ui.context.fillStyle = "red";
         }
 
+        this.game.ui.context.fillStyle = "black";
+        this.game.ui.context.fillRect(0, 0, Config.GAME_WIDTH, 30);
+
+        this.game.ui.context.fillStyle = "white";
         this.game.ui.context.fillText("lives: " + this.lives, Config.GAME_WIDTH / 2 - Config.GAME_WIDTH / 3, 20);
 
         this.game.ui.context.font = "10px Arial";
-        this.game.ui.context.fillStyle = "white";
         let alt = this.altitude < 1000 ? this.altitude : Math.round(this.altitude / 1000) + 'k';
         this.game.ui.context.fillText("alt: " + alt, Config.GAME_WIDTH / 2 - Config.GAME_WIDTH / 5, 20);
         this.game.ui.context.fillText("score: " + this.score, Config.GAME_WIDTH / 2 + Config.GAME_WIDTH / 8, 20);
