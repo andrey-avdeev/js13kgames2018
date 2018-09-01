@@ -16,7 +16,7 @@ This game was made for [js13kGames](http://js13kgames.com) 2018. The theme of th
 
 **Logic** [typescript](https://www.typescriptlang.org/)
 
-**Assets** [piskelapp](https://www.piskelapp.com/)
+**Assets** [piskelapp](https://www.piskelapp.com/), [my assets gallery here](https://www.piskelapp.com/user/6279952341139456)
 
 **Music** [soundbox.js](http://sb.bitsnbites.eu/)
 
