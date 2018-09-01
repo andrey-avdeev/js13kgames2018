@@ -124,12 +124,12 @@ export class Player extends Sprite {
 
     public updateConnectionLine() {
         let game = this.game;
-        setTimeout(() => {
-            if (game.player.connectionWidth > 5 || game.player.connectionWidth <= 0)
-                game.player.connectionIncrementFactor *= -1;
+        // setTimeout(() => {
+        //     if (game.player.connectionWidth > 3 || game.player.connectionWidth <= 0)
+        //         game.player.connectionIncrementFactor *= -1;
 
-            game.player.connectionWidth += 1 * game.player.connectionIncrementFactor;
-        }, 2000)
+        //     game.player.connectionWidth += 1 * game.player.connectionIncrementFactor;
+        // }, 2000)
     }
 
     public jumpOffPlatform(platform: Platform) {
