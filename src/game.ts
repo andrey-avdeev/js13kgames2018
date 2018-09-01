@@ -160,7 +160,7 @@ export class Game {
     public reducePlatforms() {
         if (this.platforms.maxSize > Config.PLATFORM_POOL_MIN_SIZE) {
             this.platforms.maxSize -= 1;
-            console.log('MaxSize: ', this.platforms.maxSize);
+            // console.log('MaxSize: ', this.platforms.maxSize);
         }
     }
 
