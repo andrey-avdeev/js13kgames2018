@@ -28,6 +28,11 @@ export class Information {
         this.jumps = this.game.player.jumps;
         this.connectedPlatforms = this.game.player.connectedPlatforms ? this.game.player.connectedPlatforms : 0;
 
+        if (this.connectedPlatforms >= Config.PLATFORM_POOL_REDUCE_FACTOR && this.connectedPlatforms % Config.PLATFORM_POOL_REDUCE_FACTOR == 0){
+            this.game.player.connectedPlatforms++;
+            this.game.reducePlatforms();
+        }
+
         if (this.lives > this.game.player.lives) {
             this.liveWasLost = true;
             setTimeout(() => {

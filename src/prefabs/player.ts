@@ -159,6 +159,7 @@ export class Player extends Sprite {
 
     public killEnemy(enemy: Enemy) {
         this.jump();
+        this.game.speedUpEnemyGeneration();
         this.killedEnemies += 1;
         enemy.explode();
     }

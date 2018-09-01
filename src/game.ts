@@ -105,7 +105,7 @@ export class Game {
 
         //initial platform generation
         let floorCount = Math.round(Config.GAME_WIDTH / Config.PLATFORM_BASE_WIDTH);
-        
+
         //ground platforms
         for (var i = 0; i <= floorCount; i++) {
             let platform = new Platform(
@@ -145,9 +145,22 @@ export class Game {
     public spawnEnemies(game: Game) {
         if (game.isRunning) {
             game.enemies.get(Utils.spawnEnemy(game));
-            if (game.enemyGenerationTimeout > Config.ENEMY_MIN_GENERATION_TIMEOUT)
-                game.enemyGenerationTimeout -= 1;
+            game.speedUpEnemyGeneration();
             setTimeout(() => game.spawnEnemies(game), game.enemyGenerationTimeout)
+        }
+    }
+
+    public speedUpEnemyGeneration() {
+        if (this.enemyGenerationTimeout > Config.ENEMY_MIN_GENERATION_TIMEOUT) {
+            this.enemyGenerationTimeout -= 1;
+            // console.log('Frequency: ', this.enemyGenerationTimeout);
+        }
+    }
+
+    public reducePlatforms() {
+        if (this.platforms.maxSize > Config.PLATFORM_POOL_MIN_SIZE) {
+            this.platforms.maxSize -= 1;
+            console.log('MaxSize: ', this.platforms.maxSize);
         }
     }
 
