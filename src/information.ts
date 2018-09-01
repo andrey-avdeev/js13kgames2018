@@ -28,7 +28,7 @@ export class Information {
         this.jumps = this.game.player.jumps;
         this.connectedPlatforms = this.game.player.connectedPlatforms ? this.game.player.connectedPlatforms : 0;
 
-        if (this.connectedPlatforms >= Config.PLATFORM_POOL_REDUCE_FACTOR && this.connectedPlatforms % Config.PLATFORM_POOL_REDUCE_FACTOR == 0){
+        if (this.connectedPlatforms >= Config.PLATFORM_POOL_REDUCE_FACTOR && this.connectedPlatforms % Config.PLATFORM_POOL_REDUCE_FACTOR == 0) {
             this.game.player.connectedPlatforms++;
             this.game.reducePlatforms();
         }
@@ -74,7 +74,11 @@ export class Information {
             this.game.ui.context.fillStyle = "red";
         }
 
-        this.game.ui.context.fillStyle = "black";
+        if (this.game.isExplosionPulseState) {
+            this.game.ui.context.fillStyle = "red";
+        } else {
+            this.game.ui.context.fillStyle = "black";
+        }
         this.game.ui.context.fillRect(0, 0, Config.GAME_WIDTH, 30);
 
         this.game.ui.context.fillStyle = "white";

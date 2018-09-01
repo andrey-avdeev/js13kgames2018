@@ -135,9 +135,6 @@ export class Platform extends Sprite {
     }
 
     public explosionPulse() {
-        let game = this.game;
-        game.isExplosionPulseState = true;
-
-        setTimeout(() => game.isExplosionPulseState = false, Config.PLATFORM_EXPLOSION_PULSE_TIMEOUT);
+        this.game.explosionPulse();
     }
 }

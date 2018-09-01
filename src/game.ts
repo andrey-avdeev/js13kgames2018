@@ -160,6 +160,13 @@ export class Game {
             this.platforms.maxSize -= 1;
     }
 
+    public explosionPulse() {
+        let game = this;
+        game.isExplosionPulseState = true;
+
+        setTimeout(() => game.isExplosionPulseState = false, Config.PLATFORM_EXPLOSION_PULSE_TIMEOUT);
+    }
+
     public gameOver() {
         this.stop();
         let game = this;

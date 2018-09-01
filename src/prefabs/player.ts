@@ -47,7 +47,6 @@ export class Player extends Sprite {
         this.updateMoving();
         this.applyForces();
         this.calculateAltitudes();
-        this.updateConnectionLine();
 
         if (this.altitude <= 0 || this.lastMaxAltitude - Config.GAME_HEIGHT > this.altitude) {
             this.kill();
@@ -122,16 +121,6 @@ export class Player extends Sprite {
         this.lastMaxAltitude = (this.altitude > this.lastMaxAltitude) ? this.altitude : this.lastMaxAltitude;
     }
 
-    public updateConnectionLine() {
-        let game = this.game;
-        // setTimeout(() => {
-        //     if (game.player.connectionWidth > 3 || game.player.connectionWidth <= 0)
-        //         game.player.connectionIncrementFactor *= -1;
-
-        //     game.player.connectionWidth += 1 * game.player.connectionIncrementFactor;
-        // }, 2000)
-    }
-
     public jumpOffPlatform(platform: Platform) {
         this.jump();
         if (!platform.isUnmovable)
@@ -166,6 +155,7 @@ export class Player extends Sprite {
 
     public kill() {
         this.lives -= 1;
+        this.game.explosionPulse();
     }
 
     public refreshPosition() {
