@@ -165,6 +165,10 @@ export class Game {
         let game = this;
 
         document.getElementById('content').style.display = 'none';
+
+        document.getElementById('score').textContent = game.information.score.toString();
+        document.getElementById('high-score').textContent = game.information.highScore.toString();
+
         document.getElementById('gameover').style.display = 'block';
 
         let removeHandlers = () => {
